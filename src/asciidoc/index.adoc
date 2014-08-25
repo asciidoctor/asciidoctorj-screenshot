@@ -1,0 +1,34 @@
+= How to use Gist AsciiDoctor
+Doc Writer <fx.thoorens@gmail.com>
+v1.0
+:example-caption!:
+
+TIP: This is an example using screenshot plugin for gradle-asciidoctor
+
+
+== Process
+
+Go to the Gist AsciiDoctor main page at http://gist.asciidoctor.org/
+
+[screenshot, action="browse"]
+Browser.drive {
+	go "http://gist.asciidoctor.org/"
+	waitFor(1){true}
+}
+
+[screenshot, name=mainpage]
+The main page
+
+Then enter a Gist number that point to a file written in asciidoctor. For instance 9a8d3f1d32a8f0656a42 as for https://gist.github.com/mojavelinux/9a8d3f1d32a8f0656a42
+
+[screenshot, url=https://gist.github.com/mojavelinux/9a8d3f1d32a8f0656a42, name=gist, selector=".entry-title"]
+Awesome gist example
+by mojavelinux
+
+when you validate you get the result
+[screenshot, url=http://gist.asciidoctor.org/?9a8d3f1d32a8f0656a42, action="browse"]
+Browser.drive {
+	waitFor(5){true}
+}
+[screenshot, name=gistresult]
+That's it

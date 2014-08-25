@@ -1,0 +1,52 @@
+= How to use Google properly
+Doc Writer <fx.thoorens@gmail.com>
+v1.0
+:example-caption!:
+
+NOTE: This is an example using screenshot plugin for gradle-asciidoctor
+
+== Process
+First you need to open your favorite browser and navigate to http://google.com
+
+[screenshot, name=google1, url=http://google.com, dimension=FRAME_IMAC]
+The Google landing page
+
+Then in the input form, write a query like "asciidoctor"
+
+[screenshot, action="browse"]
+Browser.drive {
+	$("input", name: "q").value("asciidoctor")
+	waitFor(5){true}
+}
+
+[screenshot, name=google2, dimension=FRAME_BROWSER]
+Some propositions should appear
+
+You don't even need to click answers appear in *realtime*
+
+After a while the answer appears, you don't event need to click on a button
+
+[screenshot, name=google3, dimension=FRAME_BROWSER]
+Awesome!
+
+Look at the first link and click on it
+[screenshot, name=google4, selector="h3.r"]
+Yep that very one link in blue
+
+[screenshot, action="browse", dimension=FRAME_IPHONE4]
+Browser.drive {
+	$("h3.r a").click()
+}
+
+And you get to the asciidoctor landing page, well and it is responsive
+[screenshot, name=google5, dimension=FRAME_IPHONE4]
+Look Ma, it's iphone4!
+
+[screenshot, name=google6, dimension=FRAME_IPHONE5]
+Look Ma, it's iphone5!
+
+[screenshot, name=google7, dimension=FRAME_SAMSUNG_S4]
+Look Ma, it's samsung s4!
+
+Here you have just unlocked the google *God Badge*. Congratulations!!!
+

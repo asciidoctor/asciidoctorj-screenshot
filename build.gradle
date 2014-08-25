@@ -1,0 +1,19 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.0'
+        System.getProperties().get "geb.build.reportsDir", "build/asciidoc/screenshots"
+        System.getProperties().get "geb.build.baseUrl", "http://localhost:8080/Booness"
+    }
+}
+
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+
+asciidoctor {
+	options = [
+		attributes: [stylesheet:"css/custom.css"]
+	]
+}
+
