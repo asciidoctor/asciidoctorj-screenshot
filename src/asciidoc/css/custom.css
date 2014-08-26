@@ -45,7 +45,7 @@ img[alt=FRAME_IPHONE5]{
 	padding-bottom: 89px;
 	padding-left: 21px;
 	padding-right: 19px;
-	min-width: 256px;
+	max-width: 256px;
 	position: relative;
 	background-size: 100% auto;
 }

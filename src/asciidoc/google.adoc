@@ -16,8 +16,9 @@ Then in the input form, write a query like "asciidoctor"
 [screenshot, action="browse"]
 Browser.drive {
 	$("input", name: "q").value("asciidoctor")
-	waitFor(5){true}
+	waitFor(5,0.5){$("h3.r a").size()>0}
 }
+
 
 [screenshot, name=google2, dimension=FRAME_BROWSER]
 Some propositions should appear
@@ -37,6 +38,7 @@ Yep that very one link in blue
 Browser.drive {
 	$("h3.r a").click()
 }
+
 
 And you get to the asciidoctor landing page, well and it is responsive
 [screenshot, name=google5, dimension=FRAME_IPHONE4]

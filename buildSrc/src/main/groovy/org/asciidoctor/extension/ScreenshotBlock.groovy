@@ -20,6 +20,8 @@ class ScreenshotBlock extends BlockProcessor {
         def maxWidth=800
         if(attributes.dimension){
             def dimension=attributes.dimension
+            def driver=Browser.drive({}).driver
+            def window=driver.manage().window()
             if(dimension=="FRAME_IPHONE4") dimension="336x504"
             else if(dimension=="FRAME_IPHONE5") dimension="336x596"
             else if(dimension=="FRAME_SAMSUNG_S4") dimension="370x657"
@@ -30,7 +32,10 @@ class ScreenshotBlock extends BlockProcessor {
             def height=dimension[1] as int
             maxHeight=height
             maxWidth=width
-            Browser.drive({}).driver.manage().window().size = new Dimension(width, height+80)
+            def size=window.size
+            int viewportdeltax = driver.executeScript("return document.documentElement.clientWidth")-size.width
+            int viewportdeltay = 80//driver.executeScript("return document.documentElement.clientHeight")-size.height
+            window.size=new Dimension(width-viewportdeltax, height+viewportdeltay)
         }
         if(attributes.action=="browse"){
             def binding = new Binding()
