@@ -3,7 +3,7 @@
 This Asciidotor package automate your documentation of your webapp using screenshots.
 No more hassles when you change simple settings like css or chnage that button that was too big, your documentation stays up to date!
 
-== quick reference
+== Quick reference
 Basic usage is a bloc *screenshot* that point to an url
 
 ----
