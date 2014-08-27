@@ -10,13 +10,13 @@ TIP: This is an example using screenshot plugin for gradle-asciidoctor
 
 Go to the Gist AsciiDoctor main page at http://gist.asciidoctor.org/
 
-[screenshot, action="browse"]
+[screenshot, action="browse", dimension=FRAME_BROWSER]
 Browser.drive {
 	go "http://gist.asciidoctor.org/"
-	waitFor(1){true}
+	waitFor(5,0.1){$("#content h1").size()>0}
 }
 
-[screenshot, name=mainpage]
+[screenshot, name=mainpage, dimension=FRAME_BROWSER]
 The main page
 
 Then enter a Gist number that point to a file written in asciidoctor. For instance 9a8d3f1d32a8f0656a42 as for https://gist.github.com/mojavelinux/9a8d3f1d32a8f0656a42
@@ -26,9 +26,10 @@ Awesome gist example
 by mojavelinux
 
 when you validate you get the result
-[screenshot, url=http://gist.asciidoctor.org/?9a8d3f1d32a8f0656a42, action="browse"]
+[screenshot, action="browse"]
 Browser.drive {
-	waitFor(5){true}
+	go "http://gist.asciidoctor.org/?9a8d3f1d32a8f0656a42"
+	waitFor(5,0.1){$("#content h1").size()>0}
 }
-[screenshot, name=gistresult]
+[screenshot, name=gistresult, dimension=FRAME_BROWSER]
 That's it
