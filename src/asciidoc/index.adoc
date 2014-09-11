@@ -11,10 +11,8 @@ TIP: This is an example using screenshot plugin for gradle-asciidoctor
 Go to the Gist AsciiDoctor main page at http://gist.asciidoctor.org/
 
 [screenshot, action="browse", dimension=FRAME_BROWSER]
-Browser.drive {
-	go "http://gist.asciidoctor.org/"
-	waitFor(5,0.1){$("#content h1").size()>0}
-}
+go "http://gist.asciidoctor.org/"
+waitFor(5,0.1){$("#content h1").size()>0}
 
 [screenshot, name=mainpage, dimension=FRAME_BROWSER]
 The main page
@@ -27,9 +25,8 @@ by mojavelinux
 
 when you validate you get the result
 [screenshot, action="browse"]
-Browser.drive {
-	go "http://gist.asciidoctor.org/?9a8d3f1d32a8f0656a42"
-	waitFor(5,0.1){$("#content h1").size()>0}
-}
+go "http://gist.asciidoctor.org/?9a8d3f1d32a8f0656a42"
+waitFor(5,0.1){$("#content h1").size()>0}
+
 [screenshot, name=gistresult, dimension=FRAME_BROWSER]
 That's it

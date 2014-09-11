@@ -42,7 +42,7 @@ class ScreenshotBlock extends BlockProcessor {
             binding.setVariable("Browser", Browser)
             binding.setVariable("Dimension", Dimension)
             def shell = new GroovyShell(binding)
-            shell.evaluate(reader.lines().join("\n"))
+            shell.evaluate("Browser.drive{"+reader.lines().join("\n")+"}")
             createBlock(parent,"paragraph","",[:],[:])
         }
         else {

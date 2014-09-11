@@ -14,10 +14,9 @@ The Google landing page
 Then in the input form, write a query like "asciidoctor"
 
 [screenshot, action="browse"]
-Browser.drive {
-	$("input", name: "q").value("asciidoctor")
-	waitFor(5,0.5){$("h3.r a").size()>0}
-}
+$("input", name: "q").value("asciidoctor")
+waitFor(5,0.5){$("h3.r a").size()>0}
+
 
 
 [screenshot, name=google2, dimension=FRAME_BROWSER]
@@ -35,9 +34,7 @@ Look at the first link and click on it
 Yep that very one link in blue
 
 [screenshot, action="browse", dimension=FRAME_IPHONE4]
-Browser.drive {
-	$("h3.r a").click()
-}
+$("h3.r a").click()
 
 
 And you get to the asciidoctor landing page, well and it is responsive

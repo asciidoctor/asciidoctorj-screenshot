@@ -26,10 +26,8 @@ The Google landing page
 
 ```
 [screenshot, action="browse"]
-Browser.drive {
-  $("input", name: "q").value("asciidoctor")
-  waitFor(5){true}
-}
+$("input", name: "q").value("asciidoctor")
+waitFor(5){true}
 ```
 
 ```
@@ -39,9 +37,7 @@ Some propositions should appear
 
 ```
 [screenshot, action="browse", dimension=FRAME_IPHONE4]
-Browser.drive {
   $("h3.r a").click()
-}
 ```
 
 ```
