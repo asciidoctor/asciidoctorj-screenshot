@@ -46,4 +46,4 @@ Look Ma, it's samsung s4!
 ```
 
 ### DEMO
-see Google 101 http://fix.github.io/asciidoctor-screenshot/google.html or Asciidoctor 101 http://fix.github.io/asciidoctor-screenshot/
+see Google 101 http://fix.github.io/asciidoctor-screenshot/demo/google.html or Asciidoctor 101 http://fix.github.io/asciidoctor-screenshot/demo
