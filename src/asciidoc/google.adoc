@@ -38,11 +38,14 @@ $("h3.r a").click()
 
 
 And you get to the asciidoctor landing page, well and it is responsive
-[screenshot, dimension=FRAME_IPHONE4]
-Look Ma, it's iphone4!
-
 [screenshot, dimension=FRAME_IPHONE5]
 Look Ma, it's iphone5!
+
+[screenshot, dimension=FRAME_IPHONE6]
+Look Ma, it's iphone6!
+
+[screenshot, dimension=FRAME_IPHONE6PLUS]
+Look Ma, it's iphone6plus!
 
 [screenshot, dimension=FRAME_SAMSUNG_S4]
 Look Ma, it's samsung s4!

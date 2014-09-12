@@ -33,6 +33,8 @@ class ScreenshotBlock extends BlockProcessor {
             def window=driver.manage().window()
             if(dimension=="FRAME_IPHONE4") dimension="336x504"
             else if(dimension=="FRAME_IPHONE5") dimension="336x596"
+            else if(dimension=="FRAME_IPHONE6") dimension="336x596"
+            else if(dimension=="FRAME_IPHONE6PLUS") dimension="360x640"
             else if(dimension=="FRAME_SAMSUNG_S4") dimension="370x657"
             else if(dimension=="FRAME_IMAC") dimension="1200x675"
             else if(dimension=="FRAME_BROWSER") dimension="800x500"

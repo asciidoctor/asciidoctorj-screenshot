@@ -15,6 +15,11 @@ img[alt=FRAME_BROWSER] {
 	position: relative;
 	background-size: 100% auto;
 }
+
+img[alt=FRAME_BROWSER]:after {
+	content: "teset"
+}
+
 img[alt=FRAME_IMAC]{
 	background: url(css/imac.png) no-repeat;
 	box-shadow: none;
@@ -41,14 +46,39 @@ img[alt=FRAME_IPHONE4]{
 img[alt=FRAME_IPHONE5]{
 	background: url(css/iphone5.png) no-repeat;
 	box-shadow: none;
-	padding-top: 80px;
+	padding-top: 72px;
 	padding-bottom: 89px;
-	padding-left: 21px;
+	padding-left: 19px;
+	padding-right: 17px;
+	max-width: 230px;
+	position: relative;
+	background-size: 100% auto;
+}
+
+img[alt=FRAME_IPHONE6]{
+	background: url(css/iphone6.png) no-repeat;
+	box-shadow: none;
+	padding-top: 61px;
+	padding-bottom: 89px;
+	padding-left: 19px;
 	padding-right: 19px;
 	max-width: 256px;
 	position: relative;
 	background-size: 100% auto;
 }
+
+img[alt=FRAME_IPHONE6PLUS]{
+	background: url(css/iphone6plus.png) no-repeat;
+	box-shadow: none;
+	padding-top: 72px;
+	padding-bottom: 89px;
+	padding-left: 20px;
+	padding-right: 20px;
+	max-width: 300px;
+	position: relative;
+	background-size: 100% auto;
+}
+
 
 img[alt=FRAME_SAMSUNG_S4]{
 	background: url(css/samsungs4.png) no-repeat;
