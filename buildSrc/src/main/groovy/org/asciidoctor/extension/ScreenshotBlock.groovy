@@ -15,6 +15,15 @@ class ScreenshotBlock extends BlockProcessor {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
 
+    String generateId(){
+        def alphabet=(('A'..'Z')+('0'..'9')).join()
+        def stringId
+        new Random().with {
+            stringId=(1..32).collect{alphabet[nextInt(36)]}.join()
+        }
+        stringId
+    }
+
     def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
         def maxHeight=600
         def maxWidth=800
@@ -47,6 +56,7 @@ class ScreenshotBlock extends BlockProcessor {
         }
         else {
             def cutElement
+            if(!attributes.name) attributes.name=generateId()
             Browser.drive {
                 if(attributes.url){
                     go attributes.url

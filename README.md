@@ -13,14 +13,14 @@ Google Landing page
 
 ### Parameters
 * *url*: the URL to point to. Optional if previously a page was already screenshoot
-* *name*: a unique id, the screenshot will be called <name>.png
+* *name*: an optional unique id (will be generated otherwise), the screenshot will be called <name>.png
 * *dimension*: size of the screenshot for instance 800x600. Try awesomeness with "FRAME_IPHONE4", "FRAME_IPHONE5", "FRAME_SAMSUNG_S4", "FRAME_IMAC" or "FRAME_BROWSER"
 * *action="browse"*: all other parameters are ignored, the block following is used to script the browsing. Useful if you need to login beforehand
 * *selector*: the css-like dom selector to screenshot. Only this will be part of the image. For instance "div #login_window".
 
 ### Examples
 ```
-[screenshot, name=google1, url=http://google.com, dimension=FRAME_IMAC]
+[screenshot, name=google, url=http://google.com, dimension=FRAME_IMAC]
 The Google landing page
 ```
 
@@ -31,7 +31,7 @@ waitFor(5){true}
 ```
 
 ```
-[screenshot, name=google2, dimension=FRAME_BROWSER]
+[screenshot, dimension=FRAME_BROWSER]
 Some propositions should appear
 ```
 
@@ -41,9 +41,9 @@ Some propositions should appear
 ```
 
 ```
-[screenshot, name=google3, dimension=FRAME_SAMSUNG_S4]
+[screenshot, dimension=FRAME_SAMSUNG_S4]
 Look Ma, it's samsung s4!
 ```
 
 ### DEMO
-see
+see Google 101 http://fix.github.io/asciidoctor-screenshot/google.html or Asciidoctor 101 http://fix.github.io/asciidoctor-screenshot/

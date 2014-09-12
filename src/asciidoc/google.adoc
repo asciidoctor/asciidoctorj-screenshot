@@ -19,14 +19,14 @@ waitFor(5,0.5){$("h3.r a").size()>0}
 
 
 
-[screenshot, name=google2, dimension=FRAME_BROWSER]
+[screenshot, dimension=FRAME_BROWSER]
 Some propositions should appear
 
 You don't even need to click answers appear in *realtime*
 
 After a while the answer appears, you don't event need to click on a button
 
-[screenshot, name=google3, dimension=FRAME_BROWSER]
+[screenshot, dimension=FRAME_BROWSER]
 Awesome!
 
 Look at the first link and click on it
@@ -38,13 +38,13 @@ $("h3.r a").click()
 
 
 And you get to the asciidoctor landing page, well and it is responsive
-[screenshot, name=google5, dimension=FRAME_IPHONE4]
+[screenshot, dimension=FRAME_IPHONE4]
 Look Ma, it's iphone4!
 
-[screenshot, name=google6, dimension=FRAME_IPHONE5]
+[screenshot, dimension=FRAME_IPHONE5]
 Look Ma, it's iphone5!
 
-[screenshot, name=google7, dimension=FRAME_SAMSUNG_S4]
+[screenshot, dimension=FRAME_SAMSUNG_S4]
 Look Ma, it's samsung s4!
 
 Here you have just unlocked the google *God Badge*. Congratulations!!!
