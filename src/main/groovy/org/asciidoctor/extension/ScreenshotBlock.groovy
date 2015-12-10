@@ -1,13 +1,11 @@
 package org.asciidoctor.extension
 
-import org.asciidoctor.extension.BlockProcessor
-import org.asciidoctor.ast.AbstractBlock
-import org.asciidoctor.extension.Reader
-import java.awt.image.BufferedImage
-import javax.imageio.ImageIO
 import geb.Browser
-import groovy.lang.Binding
+import org.asciidoctor.ast.AbstractBlock
 import org.openqa.selenium.Dimension
+
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 class ScreenshotBlock extends BlockProcessor {
     
@@ -24,7 +22,10 @@ class ScreenshotBlock extends BlockProcessor {
         stringId
     }
 
-    def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
+    def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
+        final Map<String, Object> globalAttributes = block.document.attributes
+        final Map<String, Object> globalOptions = block.document.options
+
         def maxHeight=600
         def maxWidth=800
         if(attributes.dimension){
@@ -54,7 +55,7 @@ class ScreenshotBlock extends BlockProcessor {
             binding.setVariable("Dimension", Dimension)
             def shell = new GroovyShell(binding)
             shell.evaluate("Browser.drive{"+reader.lines().join("\n")+"}")
-            createBlock(parent,"paragraph","",[:],[:])
+            createBlock(block,"paragraph","",[:],[:])
         }
         else {
             def cutElement
@@ -69,13 +70,31 @@ class ScreenshotBlock extends BlockProcessor {
                     cutElement=$(attributes.selector)
                 }
             }
-            if(cutElement) cropScreenshot(new File("build/asciidoc/screenshots/"+attributes.name+".png"),cutElement, maxWidth, maxHeight)
-            else cropScreenshot(new File("build/asciidoc/screenshots/"+attributes.name+".png"), maxWidth, maxHeight)
+
+            def buildDir = getFromOptions(globalOptions, 'to_dir')
+            String screenshotsDir = "${buildDir}/${globalAttributes['screenshot-dir-name']}/"
+            if(cutElement) cropScreenshot(new File(screenshotsDir +attributes.name + ".png"),cutElement, maxWidth, maxHeight)
+            else cropScreenshot(new File(screenshotsDir + attributes.name + ".png"), maxWidth, maxHeight)
             def alt=attributes.dimension
-            createBlock(parent,"image","",[target:"screenshots/"+attributes.name+".png",title:reader.lines().join(" // "),alt:alt],[:])
+            createBlock(block, "image", "", [
+                    target: "${screenshotsDir}/${attributes.name}.png" as String,
+                    title: reader.lines().join(" // "),
+                    alt: alt
+            ], [:])
         }
     }
 
+    // required, since keys in options are RubySymbol and not String...
+    def getFromOptions(Map options, String key) {
+        def result = null
+        options.each {k, v ->
+            if (key.equals(k as String)) {
+                result = v
+            }
+        }
+
+        return result
+    }
 
     def cropScreenshot(screen, element, int maxWidth=800, int maxHeight=1200){
         int width = element.width
@@ -87,7 +106,7 @@ class ScreenshotBlock extends BlockProcessor {
         ImageIO.write(dest, "png", screen)
     }
 
-    def cropScreenshot(screen, int maxWidth=800, int maxHeight=600){
+    def cropScreenshot(File screen, int maxWidth=800, int maxHeight=600) {
         BufferedImage img = ImageIO.read(screen)
         int width = img.width
         int height = img.height
