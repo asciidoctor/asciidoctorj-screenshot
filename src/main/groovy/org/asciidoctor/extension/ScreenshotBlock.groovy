@@ -10,6 +10,16 @@ import java.awt.image.BufferedImage
 
 class ScreenshotBlock extends BlockProcessor {
 
+    private static final Map<String, String> dimensions = [
+            "FRAME_IPHONE4"    : "336x504",
+            "FRAME_IPHONE5"    : "336x596",
+            "FRAME_IPHONE6"    : "336x596",
+            "FRAME_IPHONE6PLUS": "360x640",
+            "FRAME_SAMSUNG_S4" : "370x657",
+            "FRAME_IMAC"       : "1200x675",
+            "FRAME_BROWSER"    : "800x500"
+    ]
+
     ScreenshotBlock(String name, Map<String, Object> config) {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
@@ -29,55 +39,65 @@ class ScreenshotBlock extends BlockProcessor {
 
         def maxHeight = 600
         def maxWidth = 800
-        if (attributes.dimension) {
-            def dimension = attributes.dimension
-            def driver = Browser.drive({}).driver
-            def window = driver.manage().window()
-            if (dimension == "FRAME_IPHONE4") dimension = "336x504"
-            else if (dimension == "FRAME_IPHONE5") dimension = "336x596"
-            else if (dimension == "FRAME_IPHONE6") dimension = "336x596"
-            else if (dimension == "FRAME_IPHONE6PLUS") dimension = "360x640"
-            else if (dimension == "FRAME_SAMSUNG_S4") dimension = "370x657"
-            else if (dimension == "FRAME_IMAC") dimension = "1200x675"
-            else if (dimension == "FRAME_BROWSER") dimension = "800x500"
-            dimension = dimension.split("x")
-            def width = dimension[0] as int
-            def height = dimension[1] as int
+
+        String dimension = attributes['dimension']
+        if (dimension) {
+            if (dimensions.containsKey(dimension)) {
+                dimension = dimensions[dimension]
+            }
+            String[] d = dimension.split("x")
+            int width = d[0] as int
+            int height = d[1] as int
             maxHeight = height
             maxWidth = width
+
+            def driver = Browser.drive({}).driver
+            def window = driver.manage().window()
             def size = window.size
+
             int viewportdeltax = driver.executeScript("return document.documentElement.clientWidth") - size.width
             int viewportdeltay = 80//driver.executeScript("return document.documentElement.clientHeight")-size.height
             window.size = new Dimension(width - viewportdeltax, height + viewportdeltay)
         }
-        if (attributes.action == "browse") {
+
+        if (attributes['action'] == "browse") {
             def binding = new Binding()
             binding.setVariable("Browser", Browser)
             binding.setVariable("Dimension", Dimension)
+
             def shell = new GroovyShell(binding)
             shell.evaluate("Browser.drive{" + reader.lines().join("\n") + "}")
             createBlock(block, "paragraph", "", [:], [:])
         } else {
             def cutElement
-            if (!attributes.name) attributes.name = generateId()
+
+            def name = attributes['name']
+            if (!name) {
+                name = generateId()
+            }
+
             Browser.drive {
-                if (attributes.url) {
-                    go attributes.url
+                if (attributes['url']) {
+                    go attributes['url']
                     waitFor(1) { true }
                 }
-                report attributes.name
-                if (attributes.selector) {
-                    cutElement = $(attributes.selector)
+                report name
+                if (attributes['selector']) {
+                    cutElement = $(attributes['selector'])
                 }
             }
 
             def buildDir = getFromOptions(globalOptions, 'to_dir')
             String screenshotsDir = "${buildDir}/${globalAttributes['screenshot-dir-name']}/"
-            if (cutElement) cropScreenshot(new File(screenshotsDir + attributes.name + ".png"), cutElement, maxWidth, maxHeight)
-            else cropScreenshot(new File(screenshotsDir + attributes.name + ".png"), maxWidth, maxHeight)
-            def alt = attributes.dimension
+            if (cutElement) {
+                cropScreenshot(new File(screenshotsDir + name + ".png"), cutElement, maxWidth, maxHeight)
+            } else {
+                cropScreenshot(new File(screenshotsDir + name + ".png"), maxWidth, maxHeight)
+            }
+
+            def alt = attributes['dimension']
             createBlock(block, "image", "", [
-                    target: "${screenshotsDir}/${attributes.name}.png" as String,
+                    target: "${screenshotsDir}/${name}.png" as String,
                     title : reader.lines().join(" // "),
                     alt   : alt
             ], [:])
