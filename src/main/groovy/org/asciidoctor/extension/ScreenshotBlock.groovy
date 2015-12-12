@@ -2,6 +2,7 @@ package org.asciidoctor.extension
 
 import geb.Browser
 import org.asciidoctor.ast.AbstractBlock
+import org.jruby.RubySymbol
 import org.openqa.selenium.Dimension
 
 import javax.imageio.ImageIO
@@ -86,14 +87,8 @@ class ScreenshotBlock extends BlockProcessor {
 
     // required, since keys in options are RubySymbol and not String...
     def getFromOptions(Map options, String key) {
-        def result = null
-        options.each {k, v ->
-            if (key.equals(k as String)) {
-                result = v
-            }
-        }
-
-        return result
+        RubySymbol keySym = RubySymbol.newSymbol(rubyRuntime, key)
+        return options[keySym]
     }
 
     def cropScreenshot(screen, element, int maxWidth=800, int maxHeight=1200){
