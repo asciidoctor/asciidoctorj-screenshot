@@ -8,7 +8,7 @@ import org.openqa.selenium.Dimension
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 
-class ScreenshotBlock extends BlockProcessor {
+class TakeScreenshotBlock extends BlockProcessor {
 
     private static final Map<String, String> dimensions = [
             "FRAME_IPHONE4"    : "336x504",
@@ -20,7 +20,7 @@ class ScreenshotBlock extends BlockProcessor {
             "FRAME_BROWSER"    : "800x500"
     ]
 
-    ScreenshotBlock(String name, Map<String, Object> config) {
+    TakeScreenshotBlock(String name, Map<String, Object> config) {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
 
