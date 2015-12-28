@@ -18,6 +18,41 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
 
+    def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
+        final File screenshotDir = getScreenshotDir(block)
+
+        final File screenshotsFile = takeScreenshot(screenshotDir, attributes)
+
+        // this is a hack to display frames around images if a special dimension is selected
+        final String alt = attributes['dimension']
+        createBlock(block, "image", "", [
+                target: screenshotsFile.absolutePath,
+                title : reader.lines().join(" // "),
+                alt   : alt
+        ], [:])
+    }
+
+    private File takeScreenshot(File screenshotDir, Map<String, Object> attributes) {
+        final String dimension = attributes['dimension']
+        final String name = attributes['name']
+        final String url = attributes['url']
+        final String selector = attributes['selector']
+
+        final String fileName = name ? name : generateId()
+
+        ScreenshotDimension dim = new ScreenshotDimension(800, 600)
+        if (dimension) {
+            dim = resizeBrowserWindow(dimension)
+        }
+
+        final Navigator cutElement = takeRawScreenshot(url, screenshotDir, fileName, selector)
+        final File screenshotsFile = new File(screenshotDir, fileName + ".png")
+
+        crop(screenshotsFile, cutElement, dim)
+
+        return screenshotsFile
+    }
+
     private String generateId() {
         def alphabet = (('A'..'Z') + ('0'..'9')).join()
         def stringId
@@ -27,36 +62,17 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         stringId
     }
 
-    def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final File screenshotDir = getScreenshotDir(block)
+    private File getScreenshotDir(AbstractBlock block) {
+        Map<String, Object> globalAttributes = block.document.attributes
+        Map<RubySymbol, Object> globalOptions = block.document.options
 
-        final String dimension = attributes['dimension']
-        final String name = attributes['name']
-        final String url = attributes['url']
-        final String selector = attributes['selector']
-        // this is a hack to display frames around images if a special dimension is selected
-        final String alt = attributes['dimension']
+        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')]
+        String screenshotDirName = globalAttributes['screenshot-dir-name']
 
-        final String fileName = name ? name : generateId()
-
-        ScreenshotDimension dim = new ScreenshotDimension(800, 600)
-        if (dimension) {
-            dim = resizeBrowserWindow(dimension)
-        }
-
-        final Navigator cutElement = takeScreenshot(url, screenshotDir, fileName, selector)
-        final File screenshotsFile = new File(screenshotDir, fileName + ".png")
-
-        crop(screenshotsFile, cutElement, dim)
-
-        createBlock(block, "image", "", [
-                target: screenshotsFile.absolutePath,
-                title : reader.lines().join(" // "),
-                alt   : alt
-        ], [:])
+        new File("${buildDir}/${screenshotDirName}/")
     }
 
-    private Navigator takeScreenshot(String url, File screenshotDir, String fileName, String selector) {
+    private Navigator takeRawScreenshot(String url, File screenshotDir, String fileName, String selector) {
         Navigator cutElement = null
         Browser.drive {
             Browser browser = delegate
@@ -75,16 +91,6 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
             report fileName
         }
         cutElement
-    }
-
-    private File getScreenshotDir(AbstractBlock block) {
-        Map<String, Object> globalAttributes = block.document.attributes
-        Map<RubySymbol, Object> globalOptions = block.document.options
-
-        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')]
-        String screenshotDirName = globalAttributes['screenshot-dir-name']
-
-        new File("${buildDir}/${screenshotDirName}/")
     }
 
     private void crop(File imageFile, Navigator cutElement, ScreenshotDimension dim) {
