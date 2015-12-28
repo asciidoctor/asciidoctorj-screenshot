@@ -2,18 +2,21 @@ package org.asciidoctor.extension
 
 import geb.Browser
 import org.asciidoctor.ast.AbstractBlock
+import org.jruby.RubyHash
 import org.jruby.RubySymbol
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 
-class TakeScreenshotBlock extends BlockProcessor implements BrowserRisizer {
+import static org.jruby.RubySymbol.newSymbol
 
-    TakeScreenshotBlock(String name, Map<String, Object> config) {
+class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
+
+    TakeScreenshotBlock(String name, RubyHash config) {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
 
-    String generateId() {
+    private String generateId() {
         def alphabet = (('A'..'Z') + ('0'..'9')).join()
         def stringId
         new Random().with {
@@ -23,74 +26,81 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserRisizer {
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final Map<String, Object> globalAttributes = block.document.attributes
-        final Map<String, Object> globalOptions = block.document.options
 
-        def maxHeight = 600
-        def maxWidth = 800
+        final String dimension = attributes['dimension']
+        final String name = attributes['name']
+        final String url = attributes['url']
+        final String selector = attributes['selector']
+        // this is a hack to display frames around images if a special dimension is selected
+        final String alt = attributes['dimension']
 
-        String dimension = attributes['dimension']
+        final String fileName = name ? name : generateId()
+
+        ScreenshotDimension dim = new ScreenshotDimension(800, 600)
         if (dimension) {
-            ScreenshotDimension dim = resizBrowserWindow(dimension)
-            maxHeight = dim.height
-            maxWidth = dim.width
+            dim = resizeBrowserWindow(dimension)
         }
 
-        def cutElement
+        def cutElement = takeScreenshot(url, fileName, selector)
+        File screenshotsFile = getScreenshotFile(block, fileName)
 
-        def name = attributes['name']
-        if (!name) {
-            name = generateId()
-        }
+        crop(screenshotsFile, cutElement, dim)
 
-        Browser.drive {
-            if (attributes['url']) {
-                go attributes['url']
-                waitFor(1) { true }
-            }
-            report name
-            if (attributes['selector']) {
-                cutElement = $(attributes['selector'])
-            }
-        }
-
-        def buildDir = getFromOptions(globalOptions, 'to_dir')
-        String screenshotsDir = "${buildDir}/${globalAttributes['screenshot-dir-name']}/"
-        if (cutElement) {
-            cropScreenshot(new File(screenshotsDir + name + ".png"), cutElement, maxWidth, maxHeight)
-        } else {
-            cropScreenshot(new File(screenshotsDir + name + ".png"), maxWidth, maxHeight)
-        }
-
-        def alt = attributes['dimension']
         createBlock(block, "image", "", [
-                target: "${screenshotsDir}/${name}.png" as String,
+                target: screenshotsFile.absolutePath,
                 title : reader.lines().join(" // "),
                 alt   : alt
         ], [:])
     }
 
-    // required, since keys in options are RubySymbol and not String...
-    private def getFromOptions(Map options, String key) {
-        RubySymbol keySym = RubySymbol.newSymbol(rubyRuntime, key)
-        return options[keySym]
+    private def takeScreenshot(String url, String fileName, String selector) {
+        def cutElement = null
+        Browser.drive {
+            if (url) {
+                go url
+                waitFor(1) { true }
+            }
+
+            if (selector) {
+                cutElement = $(selector)
+            }
+
+            report fileName
+        }
+        cutElement
     }
 
-    private def cropScreenshot(imageFile, element, int maxWidth, int maxHeight) {
-        BufferedImage img = ImageIO.read(imageFile)
-        int width = Math.min(element.width, maxWidth)
-        int height = Math.min(element.height, maxHeight)
+    private File getScreenshotFile(AbstractBlock block, String name) {
+        Map<String, Object> globalAttributes = block.document.attributes
+        Map<RubySymbol, Object> globalOptions = block.document.options
 
-        BufferedImage result = img.getSubimage(element.x, element.y, width, height)
-        ImageIO.write(result, "png", imageFile)
+        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')] as String
+        String screenshotDirName = globalAttributes['screenshot-dir-name'] as String
+
+        String screenshotsDir = "${buildDir}/${screenshotDirName}/"
+
+        File imageFile = new File(screenshotsDir + name + ".png")
     }
 
-    private def cropScreenshot(File imageFile, int maxWidth, int maxHeight) {
+    private void crop(imageFile, cutElement, ScreenshotDimension dim) {
         BufferedImage img = ImageIO.read(imageFile)
-        int width = Math.min(img.width, maxWidth)
-        int height = Math.min(img.height, maxHeight)
 
-        BufferedImage result = img.getSubimage(0, 0, width, height)
-        ImageIO.write(result, "png", imageFile)
+        int x, y, w, h
+        if (cutElement) {
+            x = cutElement.x
+            y = cutElement.y
+            w = cutElement.width
+            h = cutElement.height
+
+        } else {
+            x = 0
+            y = 0
+            w = dim.width
+            h = dim.height
+        }
+
+        w = Math.min(w, img.width - x)
+        h = Math.min(h, img.height - y)
+        ImageIO.write(img.getSubimage(x, y, w, h), "png", imageFile)
     }
 }
