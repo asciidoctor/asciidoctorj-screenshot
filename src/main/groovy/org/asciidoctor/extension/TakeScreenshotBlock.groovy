@@ -1,6 +1,8 @@
 package org.asciidoctor.extension
 
 import geb.Browser
+import geb.navigator.Navigator
+import geb.report.ScreenshotReporter
 import org.asciidoctor.ast.AbstractBlock
 import org.jruby.RubyHash
 import org.jruby.RubySymbol
@@ -26,6 +28,7 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
+        final File screenshotDir = getScreenshotDir(block)
 
         final String dimension = attributes['dimension']
         final String name = attributes['name']
@@ -41,8 +44,8 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
             dim = resizeBrowserWindow(dimension)
         }
 
-        def cutElement = takeScreenshot(url, fileName, selector)
-        File screenshotsFile = getScreenshotFile(block, fileName)
+        final Navigator cutElement = takeScreenshot(url, screenshotDir, fileName, selector)
+        final File screenshotsFile = new File(screenshotDir, fileName + ".png")
 
         crop(screenshotsFile, cutElement, dim)
 
@@ -53,9 +56,13 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         ], [:])
     }
 
-    private def takeScreenshot(String url, String fileName, String selector) {
-        def cutElement = null
+    private Navigator takeScreenshot(String url, File screenshotDir, String fileName, String selector) {
+        Navigator cutElement = null
         Browser.drive {
+            Browser browser = delegate
+            browser.config.reporter = new ScreenshotReporter()
+            browser.config.reportsDir = screenshotDir
+
             if (url) {
                 go url
                 waitFor(1) { true }
@@ -70,19 +77,17 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         cutElement
     }
 
-    private File getScreenshotFile(AbstractBlock block, String name) {
+    private File getScreenshotDir(AbstractBlock block) {
         Map<String, Object> globalAttributes = block.document.attributes
         Map<RubySymbol, Object> globalOptions = block.document.options
 
-        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')] as String
-        String screenshotDirName = globalAttributes['screenshot-dir-name'] as String
+        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')]
+        String screenshotDirName = globalAttributes['screenshot-dir-name']
 
-        String screenshotsDir = "${buildDir}/${screenshotDirName}/"
-
-        File imageFile = new File(screenshotsDir + name + ".png")
+        new File("${buildDir}/${screenshotDirName}/")
     }
 
-    private void crop(imageFile, cutElement, ScreenshotDimension dim) {
+    private void crop(File imageFile, Navigator cutElement, ScreenshotDimension dim) {
         BufferedImage img = ImageIO.read(imageFile)
 
         int x, y, w, h
