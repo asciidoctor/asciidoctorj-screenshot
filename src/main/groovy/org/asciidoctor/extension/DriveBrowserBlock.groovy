@@ -2,18 +2,19 @@ package org.asciidoctor.extension
 
 import geb.Browser
 import org.asciidoctor.ast.AbstractBlock
+import org.jruby.RubyHash
 import org.openqa.selenium.Dimension
 
-class DriveBrowserBlock extends BlockProcessor implements BrowserRisizer {
+class DriveBrowserBlock extends BlockProcessor implements BrowserResizer {
 
-    DriveBrowserBlock(String name, Map<String, Object> config) {
+    DriveBrowserBlock(String name, RubyHash config) {
         super(name, [contexts: [':paragraph'], content_model: ':simple'])
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        String dimension = attributes['dimension']
+        final String dimension = attributes['dimension']
         if (dimension) {
-            resizBrowserWindow(dimension)
+            resizeBrowserWindow(dimension)
         }
 
         def binding = new Binding()
