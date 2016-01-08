@@ -1,14 +1,8 @@
 package org.asciidoctor.extension
 
-import geb.Browser
-import geb.navigator.Navigator
-import geb.report.ScreenshotReporter
 import org.asciidoctor.ast.AbstractBlock
 import org.jruby.RubyHash
 import org.jruby.RubySymbol
-
-import javax.imageio.ImageIO
-import java.awt.image.BufferedImage
 
 import static org.jruby.RubySymbol.newSymbol
 
@@ -19,12 +13,11 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final File screenshotDir = getScreenshotDir(block)
-
-        final File screenshotsFile = takeScreenshot(screenshotDir, attributes)
+        final File screenshotsFile = new ScreenshotTaker(screenshotDir(block), attributes).takeScreenshot()
 
         // this is a hack to display frames around images if a special dimension is selected
         final String alt = attributes['dimension']
+
         createBlock(block, "image", "", [
                 target: screenshotsFile.absolutePath,
                 title : reader.lines().join(" // "),
@@ -32,37 +25,7 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         ], [:])
     }
 
-    private File takeScreenshot(File screenshotDir, Map<String, Object> attributes) {
-        final String dimension = attributes['dimension']
-        final String name = attributes['name']
-        final String url = attributes['url']
-        final String selector = attributes['selector']
-
-        final String fileName = name ? name : generateId()
-
-        ScreenshotDimension dim = new ScreenshotDimension(800, 600)
-        if (dimension) {
-            dim = resizeBrowserWindow(dimension)
-        }
-
-        final Navigator cutElement = takeRawScreenshot(url, screenshotDir, fileName, selector)
-        final File screenshotsFile = new File(screenshotDir, fileName + ".png")
-
-        crop(screenshotsFile, cutElement, dim)
-
-        return screenshotsFile
-    }
-
-    private String generateId() {
-        def alphabet = (('A'..'Z') + ('0'..'9')).join()
-        def stringId
-        new Random().with {
-            stringId = (1..32).collect { alphabet[nextInt(36)] }.join()
-        }
-        stringId
-    }
-
-    private File getScreenshotDir(AbstractBlock block) {
+    private File screenshotDir(AbstractBlock block) {
         Map<String, Object> globalAttributes = block.document.attributes
         Map<RubySymbol, Object> globalOptions = block.document.options
 
@@ -70,48 +33,5 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         String screenshotDirName = globalAttributes['screenshot-dir-name']
 
         new File("${buildDir}/${screenshotDirName}/")
-    }
-
-    private Navigator takeRawScreenshot(String url, File screenshotDir, String fileName, String selector) {
-        Navigator cutElement = null
-        Browser.drive {
-            Browser browser = delegate
-            browser.config.reporter = new ScreenshotReporter()
-            browser.config.reportsDir = screenshotDir
-
-            if (url) {
-                go url
-                waitFor(1) { true }
-            }
-
-            if (selector) {
-                cutElement = $(selector)
-            }
-
-            report fileName
-        }
-        cutElement
-    }
-
-    private void crop(File imageFile, Navigator cutElement, ScreenshotDimension dim) {
-        BufferedImage img = ImageIO.read(imageFile)
-
-        int x, y, w, h
-        if (cutElement) {
-            x = cutElement.x
-            y = cutElement.y
-            w = cutElement.width
-            h = cutElement.height
-
-        } else {
-            x = 0
-            y = 0
-            w = dim.width
-            h = dim.height
-        }
-
-        w = Math.min(w, img.width - x)
-        h = Math.min(h, img.height - y)
-        ImageIO.write(img.getSubimage(x, y, w, h), "png", imageFile)
     }
 }
