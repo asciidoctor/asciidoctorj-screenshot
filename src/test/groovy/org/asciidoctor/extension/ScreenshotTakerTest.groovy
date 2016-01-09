@@ -10,21 +10,22 @@ import java.security.MessageDigest
  * ...
  */
 class ScreenshotTakerTest extends Specification {
-    private String url
-    private File outputDir
+
+    public static final String NAME = 'screeeny'
 
     @Rule
     TemporaryFolder tmpFolder = new TemporaryFolder()
 
+    private String url = getClass().classLoader.getResource("sample.html").toString()
+    private File outputDir
+
     void setup() {
-        url = getClass().classLoader.getResource("sample.html").toString()
         outputDir = tmpFolder.newFolder()
-        outputDir = new File('/tmp')
     }
 
     def 'screenshot is placed into output directory'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url' : url])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -36,15 +37,15 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot is has given name'() {
         given:
-          String name = 'screeeny'
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url' : url, 'name': name])
+
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'name': NAME])
 
         when:
           File screenshot = sut.takeScreenshot()
 
         then:
           screenshot.exists()
-          screenshot.name == name + '.png'
+          screenshot.name == NAME + '.png'
     }
 
     def 'screenshot without dimension is equal to the expected 800x600'() {
@@ -83,7 +84,11 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of circle is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': '800x600', 'selector': '.circle'])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'dimension': '800x600',
+                  'selector' : '.circle'
+          ])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -94,7 +99,11 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of circle with dimension Smasung S4 is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'FRAME_SAMSUNG_S4', 'selector': '.circle', 'name': 'ccc'])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'dimension': 'FRAME_SAMSUNG_S4',
+                  'selector' : '.circle'
+          ])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -111,11 +120,11 @@ class ScreenshotTakerTest extends Specification {
 
     private static byte[] getChecksum(file) {
         MessageDigest digest = MessageDigest.getInstance('MD5')
-        InputStream inputstream = file.newInputStream()
+        InputStream fileStream = file.newInputStream()
         byte[] buffer = new byte[16384]
         int len
 
-        while((len=inputstream.read(buffer)) > 0) {
+        while ((len = fileStream.read(buffer)) > 0) {
             digest.update(buffer, 0, len)
         }
         digest.digest()
