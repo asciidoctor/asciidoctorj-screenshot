@@ -26,3 +26,23 @@ publishing {
         }
     }
 }
+
+license {
+    header = rootProject.file('config/HEADER')
+    strictCheck = true
+    ignoreFailures = false
+    mapping {
+        java ='SLASHSTAR_STYLE'
+        groovy ='SLASHSTAR_STYLE'
+    }
+    ext.year = '2015-2016'
+    ext.author = 'Stephan Classen'
+    excludes(['**/*.png', '**/sample.html'])
+}
+
+jar {
+    metaInf {
+        from '.'
+        include 'LICENSE'
+    }
+}
