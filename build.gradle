@@ -3,7 +3,11 @@ plugins {
     id 'maven-publish'
     id 'com.github.hierynomus.license' version '0.12.1'
     id 'com.github.ben-manes.versions' version '0.12.0'
+    id 'com.jfrog.bintray' version '1.5'
 }
+
+apply from: rootProject.file('gradle/publishing.gradle')
+apply from: rootProject.file('gradle/packaging.gradle')
 
 repositories {
     jcenter()
@@ -13,18 +17,10 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'org.asciidoctor:asciidoctorj:1.5.4'
     compile 'org.gebish:geb-core:0.12.2'
-    compile 'org.seleniumhq.selenium:selenium-firefox-driver:2.48.2'
-    compile 'org.seleniumhq.selenium:selenium-support:2.48.2'
+    compile 'org.seleniumhq.selenium:selenium-firefox-driver:2.49.0'
+    compile 'org.seleniumhq.selenium:selenium-support:2.49.0'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
 }
 
 license {
@@ -37,12 +33,5 @@ license {
     }
     ext.year = '2015-2016'
     ext.author = 'Stephan Classen'
-    excludes(['**/*.png', '**/sample.html'])
-}
-
-jar {
-    metaInf {
-        from '.'
-        include 'LICENSE'
-    }
+    excludes(['**/*.png', '**/sample.html', '**/*.ExtensionRegistry'])
 }
