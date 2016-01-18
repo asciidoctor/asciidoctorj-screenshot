@@ -1,0 +1,17 @@
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+task install(dependsOn: publishToMavenLocal)
+
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = 'asciidoctor'
+    key = project.bintrayApiKey
+    pkg.repo = 'maven'
+}
