@@ -9,6 +9,7 @@ plugins {
 
 apply from: rootProject.file('gradle/publishing.gradle')
 apply from: rootProject.file('gradle/packaging.gradle')
+apply from: rootProject.file('gradle/docs.gradle')
 
 repositories {
     jcenter()

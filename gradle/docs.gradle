@@ -1,0 +1,11 @@
+groovydoc {
+    use = true
+    source = project.sourceSets.main.allSource
+    classpath = javadoc.classpath
+    windowTitle = "$project.name $project.version API"
+    docTitle = "$project.name $project.version API"
+    header = "$project.name $project.version API"
+    includePrivate = false
+    link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
+    link 'http://www.javadoc.io/doc/org.asciidoctor/asciidoctorj/1.5.4/', 'org.asciidoctor.'
+}
