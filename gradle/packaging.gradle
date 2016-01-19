@@ -57,4 +57,33 @@ task sourcesJar(type: Jar) {
     }
 }
 
+task docJar(type: Jar, dependsOn: groovydoc) {
+    group 'Build'
+    description 'An archive of the groovydoc'
+    classifier 'groovydoc'
+    from groovydoc.destinationDir
+
+    manifest {
+        attributes(
+                'Built-By': System.properties['user.name'],
+                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+                'Build-Date': project.buildDate,
+                'Build-Time': project.buildTime,
+                'Build-Revision': versioning.info.commit,
+                'Specification-Title': project.name,
+                'Specification-Version': project.version,
+                'Specification-Vendor': 'asciidoctor.org',
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'asciidoctor.org'
+        )
+    }
+
+    metaInf {
+        from '.'
+        include 'LICENSE'
+    }
+}
+
 jar.finalizedBy sourcesJar
+jar.finalizedBy docJar
