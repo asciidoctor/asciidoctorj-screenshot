@@ -41,6 +41,7 @@ class ScreenshotTaker implements BrowserResizer {
     private final String url
     private final String selector
     private final String fileName
+    private final File imageFile
 
     ScreenshotTaker(File screenshotDir, Map<String, Object> attributes) {
         this.screenshotDir = screenshotDir
@@ -50,6 +51,7 @@ class ScreenshotTaker implements BrowserResizer {
 
         String name = attributes['name']
         this.fileName = name ? name : uniqueName()
+        this.imageFile = new File(screenshotDir, fileName + ".png")
     }
 
     private static String uniqueName() {
@@ -60,7 +62,12 @@ class ScreenshotTaker implements BrowserResizer {
 
     File takeScreenshot() {
         ScreenshotDimension dim = resizeBrowserIfNecessary()
-        crop(rawScreenshot(), dim)
+
+        BufferedImage rawScreenshot = rawScreenshot()
+        BufferedImage croppedImage = crop(rawScreenshot, dim)
+
+        ImageIO.write(croppedImage, "png", imageFile)
+        imageFile
     }
 
     private ScreenshotDimension resizeBrowserIfNecessary() {
@@ -71,8 +78,7 @@ class ScreenshotTaker implements BrowserResizer {
         }
     }
 
-    private Navigator rawScreenshot() {
-        Navigator cutElement = null
+    private BufferedImage rawScreenshot() {
         Browser.drive {
             Browser browser = delegate as Browser
             browser.config.reporter = new ScreenshotReporter()
@@ -83,26 +89,29 @@ class ScreenshotTaker implements BrowserResizer {
                 waitFor(1) { true }
             }
 
-            if (selector) {
-                cutElement = $(selector)
-            }
-
             report fileName
         }
-        cutElement
+
+        ImageIO.read(imageFile)
     }
 
-    private File crop(Navigator element, ScreenshotDimension dim) {
-        final File imageFile = new File(screenshotDir, fileName + ".png")
-        final BufferedImage img = ImageIO.read(imageFile)
-
+    private BufferedImage crop(BufferedImage img, ScreenshotDimension dim) {
         int x, y, w, h
-        if (element) {
+
+        if (selector) {
+            Navigator element = null
+            Browser.drive {
+                element = $(selector)
+            }
+
+            if (element == null) {
+                throw new IllegalArgumentException("Selector '$selector' did not match any content in the page")
+            }
+
             x = element.x
             y = element.y
             w = element.width
             h = element.height
-
         } else {
             x = 0
             y = 0
@@ -112,8 +121,7 @@ class ScreenshotTaker implements BrowserResizer {
 
         w = min(w, img.width - x)
         h = min(h, img.height - y)
-        ImageIO.write(img.getSubimage(x, y, w, h), "png", imageFile)
 
-        imageFile
+        img.getSubimage(x, y, w, h)
     }
 }
