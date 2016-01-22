@@ -28,7 +28,11 @@ import geb.navigator.Navigator
 import geb.report.ScreenshotReporter
 
 import javax.imageio.ImageIO
+import java.awt.Image
 import java.awt.image.BufferedImage
+import java.awt.image.ImageObserver
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 import static java.lang.Math.min
 
@@ -38,6 +42,7 @@ class ScreenshotTaker implements BrowserResizer {
 
     private final File screenshotDir
     private final String dimension
+    private final String frame
     private final String url
     private final String selector
     private final String fileName
@@ -46,6 +51,7 @@ class ScreenshotTaker implements BrowserResizer {
     ScreenshotTaker(File screenshotDir, Map<String, Object> attributes) {
         this.screenshotDir = screenshotDir
         this.dimension = attributes['dimension']
+        this.frame = attributes['frame']
         this.url = attributes['url']
         this.selector = attributes['selector']
 
@@ -65,13 +71,16 @@ class ScreenshotTaker implements BrowserResizer {
 
         BufferedImage rawScreenshot = rawScreenshot()
         BufferedImage croppedImage = crop(rawScreenshot, dim)
+        BufferedImage framedImage = frame(croppedImage)
 
-        ImageIO.write(croppedImage, "png", imageFile)
+        ImageIO.write(framedImage, "png", imageFile)
         imageFile
     }
 
     private ScreenshotDimension resizeBrowserIfNecessary() {
-        if (dimension) {
+        if (frame) {
+            resizeBrowserWindow(frame)
+        } else if (dimension) {
             resizeBrowserWindow(dimension)
         } else {
             new ScreenshotDimension(800, 600)
@@ -123,5 +132,43 @@ class ScreenshotTaker implements BrowserResizer {
         h = min(h, img.height - y)
 
         img.getSubimage(x, y, w, h)
+    }
+
+    private BufferedImage frame(BufferedImage img) {
+        if (frame) {
+            Frame f = Frame.valueOf(frame)
+
+            BufferedImage result = f.frameImage
+
+            // drawing is asynchronous - wait until the drawing is completed
+            CountDownLatch latch = new CountDownLatch(1)
+            boolean imageComplete = result.graphics.drawImage(img, f.xOffset, f.yOffset, new ImageCompleteWaiter(latch))
+            if (! imageComplete) {
+                latch.await(10, TimeUnit.SECONDS)
+            }
+
+            result
+        } else {
+            img
+        }
+    }
+
+    private static class ImageCompleteWaiter implements ImageObserver {
+
+        private final CountDownLatch latch
+
+        ImageCompleteWaiter(CountDownLatch latch) {
+            this.latch = latch
+        }
+
+        @Override
+        boolean imageUpdate(Image observedImg, int flags, int x, int y, int width, int height) {
+            if (flags & ALLBITS) {
+                latch.countDown()
+                false
+            } else {
+                true
+            }
+        }
     }
 }

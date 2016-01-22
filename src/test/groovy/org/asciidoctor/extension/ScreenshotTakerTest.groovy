@@ -95,7 +95,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot with dimension Samsung S4 is equal to the expected 370x657'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'FRAME_SAMSUNG_S4'])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'SAMSUNG_S4'])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -124,7 +124,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'      : url,
-                  'dimension': 'FRAME_SAMSUNG_S4',
+                  'dimension': 'SAMSUNG_S4',
                   'selector' : '.circle'
           ])
 
@@ -133,6 +133,21 @@ class ScreenshotTakerTest extends Specification {
 
         then:
           getChecksum(screenshot) == getChecksum('screenshot_circle_samsungS4.png')
+    }
+
+    def 'screenshot of with frame Smasung S4 is equal to the expected'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'frame': 'SAMSUNG_S4'
+          ])
+
+        when:
+          File screenshot = sut.takeScreenshot()
+
+        then:
+          screenshot.exists()
+          // TODO: getChecksum(screenshot) == getChecksum('screenshot_frame_samsungS4.png')
     }
 
 
