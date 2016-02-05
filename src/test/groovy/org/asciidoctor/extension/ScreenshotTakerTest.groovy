@@ -117,28 +117,13 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_circle_800x600.png')
-    }
-
-    def 'screenshot of circle with dimension Nexus5 is equal to the expected'() {
-        given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
-                  'url'      : url,
-                  'dimension': 'NEXUS5',
-                  'selector' : '.circle'
-          ])
-
-        when:
-          File screenshot = sut.takeScreenshot()
-
-        then:
-          getChecksum(screenshot) == getChecksum('screenshot_circle_nexus5.png')
+          getChecksum(screenshot) == getChecksum('screenshot_circle.png')
     }
 
     def 'screenshot of with frame browser is equal to the expected'() {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
-                  'url'      : url,
+                  'url'  : url,
                   'frame': 'BROWSER'
           ])
 
@@ -153,7 +138,7 @@ class ScreenshotTakerTest extends Specification {
     def 'screenshot of with frame iPhone5 is equal to the expected'() {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
-                  'url'      : url,
+                  'url'  : url,
                   'frame': 'IPHONE5'
           ])
 
@@ -168,7 +153,7 @@ class ScreenshotTakerTest extends Specification {
     def 'screenshot of with frame Nexus5 is equal to the expected'() {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
-                  'url'      : url,
+                  'url'  : url,
                   'frame': 'NEXUS5'
           ])
 
@@ -178,6 +163,86 @@ class ScreenshotTakerTest extends Specification {
         then:
           screenshot.exists()
           getChecksum(screenshot) == getChecksum('screenshot_frame_nexus5.png')
+    }
+
+    def 'screenshot of inexistent selector should throw an exception'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'dimension': 'BROWSER',
+                  'selector' : '.blubb'
+          ])
+
+        when:
+          sut.takeScreenshot()
+
+        then:
+          Exception e = thrown(IllegalArgumentException)
+          e.message == 'Selector \'.blubb\' did not match any content in the page'
+    }
+
+    def 'screenshot of circle with width 300 should throw an exception'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'dimension': '300x1000',
+                  'selector' : '.circle'
+          ])
+
+        when:
+          sut.takeScreenshot()
+
+        then:
+          Exception e = thrown(IllegalArgumentException)
+          e.message == 'the selected element \'.circle\' is wider than the screenshot'
+    }
+
+    def 'screenshot of circle with height 300 should throw an exception'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'dimension': '1000x300',
+                  'selector' : '.circle'
+          ])
+
+        when:
+          sut.takeScreenshot()
+
+        then:
+          Exception e = thrown(IllegalArgumentException)
+          e.message == 'the selected element \'.circle\' is taller than the screenshot'
+    }
+
+    def 'specifying frame and selector should throw an exception'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'     : url,
+                  'frame'   : 'NEXUS5',
+                  'selector': '.circle'
+          ])
+
+        when:
+          sut.takeScreenshot()
+
+        then:
+          Exception e = thrown(IllegalArgumentException)
+          e.message == 'frame and selector may not be specified for the same screenshot'
+    }
+
+    def 'specifying frame and dimension should throw an exception'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'frame'    : 'NEXUS5',
+                  'dimension': 'NEXUS5'
+          ])
+
+        when:
+          sut.takeScreenshot()
+
+        then:
+          Exception e = thrown(IllegalArgumentException)
+          e.message == 'frame and dimension may not be specified for the same screenshot'
     }
 
 

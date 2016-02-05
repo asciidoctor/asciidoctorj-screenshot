@@ -34,8 +34,6 @@ import java.awt.image.ImageObserver
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-import static java.lang.Math.min
-
 class ScreenshotTaker implements BrowserResizer {
     private static final Collection<Object> ALPHABET = ['A'..'Z', '0'..'9'].flatten()
     private static final int ALPHABET_SIZE = ALPHABET.size()
@@ -55,7 +53,7 @@ class ScreenshotTaker implements BrowserResizer {
         this.url = attributes['url']
         this.selector = attributes['selector']
 
-        String name = attributes['name']
+        final String name = attributes['name']
         this.fileName = name ? name : uniqueName()
         this.imageFile = new File(screenshotDir, fileName + ".png")
     }
@@ -67,6 +65,7 @@ class ScreenshotTaker implements BrowserResizer {
     }
 
     File takeScreenshot() {
+        validateAttributes()
         ScreenshotDimension dim = resizeBrowserIfNecessary()
 
         BufferedImage rawScreenshot = rawScreenshot()
@@ -75,6 +74,17 @@ class ScreenshotTaker implements BrowserResizer {
 
         ImageIO.write(framedImage, "png", imageFile)
         imageFile
+    }
+
+    private validateAttributes() {
+        if (frame) {
+            if (dimension) {
+                throw new IllegalArgumentException('frame and dimension may not be specified for the same screenshot')
+            }
+            if (selector) {
+                throw new IllegalArgumentException('frame and selector may not be specified for the same screenshot')
+            }
+        }
     }
 
     private ScreenshotDimension resizeBrowserIfNecessary() {
@@ -105,7 +115,7 @@ class ScreenshotTaker implements BrowserResizer {
     }
 
     private BufferedImage crop(BufferedImage img, ScreenshotDimension dim) {
-        int x, y, w, h
+        final int x, y, w, h
 
         if (selector) {
             Navigator element = null
@@ -113,7 +123,7 @@ class ScreenshotTaker implements BrowserResizer {
                 element = $(selector)
             }
 
-            if (element == null) {
+            if (element == null || element.isEmpty()) {
                 throw new IllegalArgumentException("Selector '$selector' did not match any content in the page")
             }
 
@@ -128,8 +138,15 @@ class ScreenshotTaker implements BrowserResizer {
             h = dim.height
         }
 
-        w = min(w, img.width - x)
-        h = min(h, img.height - y)
+        if (img.width < dim.width || img.height < dim.height) {
+            throw new IllegalStateException('image is smaller than the requested screenshot')
+        }
+        if (w > dim.width - x) {
+            throw new IllegalArgumentException("the selected element '$selector' is wider than the screenshot")
+        }
+        if (h > dim.height - y) {
+            throw new IllegalArgumentException("the selected element '$selector' is taller than the screenshot")
+        }
 
         img.getSubimage(x, y, w, h)
     }
@@ -143,7 +160,7 @@ class ScreenshotTaker implements BrowserResizer {
             // drawing is asynchronous - wait until the drawing is completed
             CountDownLatch latch = new CountDownLatch(1)
             boolean imageComplete = result.graphics.drawImage(img, f.xOffset, f.yOffset, new ImageCompleteWaiter(latch))
-            if (! imageComplete) {
+            if (!imageComplete) {
                 latch.await(10, TimeUnit.SECONDS)
             }
 
