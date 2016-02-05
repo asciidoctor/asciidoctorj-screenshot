@@ -8,13 +8,9 @@ import java.awt.image.BufferedImage
  */
 enum Frame {
 
-    IPHONE4('336x504', 'iphone4.png', 5, 5),
-    IPHONE5('336x596', 'iphone5.png', 5, 5),
-    IPHONE6('336x596', 'iphone6.png', 5, 5),
-    IPHONE6PLUS('360x640', 'iphone6plus.png', 5, 5),
-    SAMSUNG_S4('370x657', 'samsungS4.png', 5, 5),
-    IMAC('1200x675', 'imac.png', 5, 5),
-    BROWSER('800x500', 'browser.png', 5, 5);
+    BROWSER('800x600', 'browser.png', 6, 71),
+    IPHONE5('320x568', 'iphone-5.png', 34, 118),
+    NEXUS5('360x640', 'nexus-5.png', 23, 68);
 
     static Map<String, String> dimensions() {
         Map<String, String> result = [:]
@@ -30,11 +26,11 @@ enum Frame {
     final int xOffset
     final int yOffset
     
-    private Frame(String dimension, String imageName, int x, int y) {
+    private Frame(String dimension, String imageName, int xOffset, int yOffset) {
         this.dim = dimension
         this.imageName = imageName
-        this.xOffset = x
-        this.yOffset = y
+        this.xOffset = xOffset
+        this.yOffset = yOffset
     }
     
     BufferedImage getFrameImage() {

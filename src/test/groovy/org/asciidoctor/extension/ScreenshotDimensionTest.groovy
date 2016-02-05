@@ -41,19 +41,15 @@ class ScreenshotDimensionTest extends Specification {
           d.height == h
 
         where:
-          dim           ||    w |   h
-          '100x200'     ||  100 | 200
-          '200x200'     ||  200 | 200
-          '300x200'     ||  300 | 200
-          '200x100'     ||  200 | 100
-          '200x100'     ||  200 | 100
-          'IPHONE4'     ||  336 | 504
-          'IPHONE5'     ||  336 | 596
-          'IPHONE6'     ||  336 | 596
-          'IPHONE6PLUS' ||  360 | 640
-          'SAMSUNG_S4'  ||  370 | 657
-          'IMAC'        || 1200 | 675
-          'BROWSER'     ||  800 | 500
+          dim       || w | h
+          '100x200' || 100 | 200
+          '200x200' || 200 | 200
+          '300x200' || 300 | 200
+          '200x100' || 200 | 100
+          '200x100' || 200 | 100
+          'BROWSER' || 800 | 600
+          'IPHONE5' || 320 | 568
+          'NEXUS5'  || 360 | 640
     }
 
     @Unroll
