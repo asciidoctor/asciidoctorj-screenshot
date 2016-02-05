@@ -93,15 +93,15 @@ class ScreenshotTakerTest extends Specification {
           getChecksum(screenshot) == getChecksum('screenshot_800x600.png')
     }
 
-    def 'screenshot with dimension Samsung S4 is equal to the expected 370x657'() {
+    def 'screenshot with dimension Nexus5 is equal to the expected 360x640'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'SAMSUNG_S4'])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'NEXUS5'])
 
         when:
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_samsungS4.png')
+          getChecksum(screenshot) == getChecksum('screenshot_nexus5.png')
     }
 
 
@@ -117,14 +117,14 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_circle.png')
+          getChecksum(screenshot) == getChecksum('screenshot_circle_800x600.png')
     }
 
-    def 'screenshot of circle with dimension Smasung S4 is equal to the expected'() {
+    def 'screenshot of circle with dimension Nexus5 is equal to the expected'() {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'      : url,
-                  'dimension': 'SAMSUNG_S4',
+                  'dimension': 'NEXUS5',
                   'selector' : '.circle'
           ])
 
@@ -132,14 +132,14 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_circle_samsungS4.png')
+          getChecksum(screenshot) == getChecksum('screenshot_circle_nexus5.png')
     }
 
-    def 'screenshot of with frame Smasung S4 is equal to the expected'() {
+    def 'screenshot of with frame browser is equal to the expected'() {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'      : url,
-                  'frame': 'SAMSUNG_S4'
+                  'frame': 'BROWSER'
           ])
 
         when:
@@ -147,7 +147,37 @@ class ScreenshotTakerTest extends Specification {
 
         then:
           screenshot.exists()
-          // TODO: getChecksum(screenshot) == getChecksum('screenshot_frame_samsungS4.png')
+          getChecksum(screenshot) == getChecksum('screenshot_frame_browser.png')
+    }
+
+    def 'screenshot of with frame iPhone5 is equal to the expected'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'frame': 'IPHONE5'
+          ])
+
+        when:
+          File screenshot = sut.takeScreenshot()
+
+        then:
+          screenshot.exists()
+          getChecksum(screenshot) == getChecksum('screenshot_frame_iphone5.png')
+    }
+
+    def 'screenshot of with frame Nexus5 is equal to the expected'() {
+        given:
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+                  'url'      : url,
+                  'frame': 'NEXUS5'
+          ])
+
+        when:
+          File screenshot = sut.takeScreenshot()
+
+        then:
+          screenshot.exists()
+          getChecksum(screenshot) == getChecksum('screenshot_frame_nexus5.png')
     }
 
 
