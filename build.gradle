@@ -35,5 +35,5 @@ license {
     }
     ext.year = '2015-2016'
     ext.author = 'Stephan Classen'
-    excludes(['**/*.png', '**/sample.html', '**/*.ExtensionRegistry'])
+    excludes(['**/*.png', '**/LICENSE', '**/sample.html', '**/*.ExtensionRegistry'])
 }
