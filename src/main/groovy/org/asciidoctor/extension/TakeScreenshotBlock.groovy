@@ -36,29 +36,36 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final File screenshotsFile = new ScreenshotTaker(screenshotDir(block), attributes).takeScreenshot()
+        final File buildDir = this.buildDir(block)
+        final File screenshotDir = screenshotDir(block, buildDir)
 
-        // this is a hack to display frames around images if a special dimension is selected
-        final String alt = attributes['dimension']
+        final File screenshotsFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
+        final String imageRelativeToBuildDir = buildDir.toURI().relativize(screenshotsFile.toURI()) as String
 
         createBlock(block, "image", "", [
-                target: screenshotsFile.absolutePath,
+                target: imageRelativeToBuildDir,
                 title : reader.lines().join(" // "),
-                alt   : alt
         ], [:])
     }
 
-    private File screenshotDir(AbstractBlock block) {
-        Map<String, Object> globalAttributes = block.document.attributes
+    private File buildDir(AbstractBlock block) {
         Map<RubySymbol, Object> globalOptions = block.document.options
 
-        String buildDir = globalOptions[newSymbol(rubyRuntime, 'destination_dir')]
+        String toDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')]
+        String destDir = globalOptions[newSymbol(rubyRuntime, 'destination_dir')]
+        String buildDir = toDir ? toDir : destDir
+        new File(buildDir)
+    }
+
+    private File screenshotDir(AbstractBlock block, File buildDir) {
+        Map<String, Object> globalAttributes = block.document.attributes
+
         String screenshotDirName = globalAttributes['screenshot-dir-name']
 
         if (!screenshotDirName || screenshotDirName.isAllWhitespace()) {
             screenshotDirName = 'screenshots'
         }
 
-        new File("${buildDir}/${screenshotDirName}/")
+        new File(buildDir, screenshotDirName)
     }
 }
