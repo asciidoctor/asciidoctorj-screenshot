@@ -52,8 +52,12 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         Map<String, Object> globalAttributes = block.document.attributes
         Map<RubySymbol, Object> globalOptions = block.document.options
 
-        String buildDir = globalOptions[newSymbol(rubyRuntime, 'to_dir')]
+        String buildDir = globalOptions[newSymbol(rubyRuntime, 'destination_dir')]
         String screenshotDirName = globalAttributes['screenshot-dir-name']
+
+        if (!screenshotDirName || screenshotDirName.isAllWhitespace()) {
+            screenshotDirName = 'screenshots'
+        }
 
         new File("${buildDir}/${screenshotDirName}/")
     }
