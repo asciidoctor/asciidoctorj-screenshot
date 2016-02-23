@@ -30,7 +30,7 @@ import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 /**
- * ...
+ * Integration test for {@link TakeScreenshotBlock}.
  */
 class TakeScreenshotBlockTest extends Specification {
 
@@ -61,18 +61,30 @@ caption
 
     def "default dir for images should be 'screenshots' below 'destination_dir'"() {
         when:
-          asciidoctor.convert(document1, options)
+          String html = asciidoctor.convert(document1, options)
 
         then:
           new File(outputDir, 'screenshots/image1.png').exists()
+          html.contains('<img src="screenshots/image1.png"')
     }
 
     def "take configured dir name for images"() {
         when:
           options.setAttributes(['screenshot-dir-name': 'img'])
-          asciidoctor.convert(document1, options)
+          String html = asciidoctor.convert(document1, options)
 
         then:
           new File(outputDir, 'img/image1.png').exists()
+          html.contains('<img src="img/image1.png"')
+    }
+
+    def "take configured dir name for images in parent"() {
+        when:
+          options.setAttributes(['screenshot-dir-name': '../img'])
+          String html = asciidoctor.convert(document1, options)
+
+        then:
+          new File(tmpFolder.root, 'img/image1.png').exists()
+          html.contains('<img src="../img/image1.png"')
     }
 }

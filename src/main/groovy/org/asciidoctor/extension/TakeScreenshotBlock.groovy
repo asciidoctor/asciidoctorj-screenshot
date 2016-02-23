@@ -36,14 +36,14 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final File buildDir = this.buildDir(block)
-        final File screenshotDir = screenshotDir(block, buildDir)
+        final File buildDir = buildDir(block)
+        final String screenshotDirName = screenshotDirName(block)
+        final File screenshotDir = new File(buildDir, screenshotDirName)
 
         final File screenshotsFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
-        final String imageRelativeToBuildDir = buildDir.toURI().relativize(screenshotsFile.toURI()) as String
 
         createBlock(block, "image", "", [
-                target: imageRelativeToBuildDir,
+                target: screenshotDirName + '/' + screenshotsFile.name,
                 title : reader.lines().join(" // "),
         ], [:])
     }
@@ -57,7 +57,7 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         new File(buildDir)
     }
 
-    private File screenshotDir(AbstractBlock block, File buildDir) {
+    private String screenshotDirName(AbstractBlock block) {
         Map<String, Object> globalAttributes = block.document.attributes
 
         String screenshotDirName = globalAttributes['screenshot-dir-name']
@@ -65,7 +65,6 @@ class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
         if (!screenshotDirName || screenshotDirName.isAllWhitespace()) {
             screenshotDirName = 'screenshots'
         }
-
-        new File(buildDir, screenshotDirName)
+        screenshotDirName
     }
 }
