@@ -26,14 +26,12 @@ dependencies {
 }
 
 license {
-    header = rootProject.file('config/HEADER')
+    header = rootProject.file('LICENSE')
     strictCheck = true
     ignoreFailures = false
     mapping {
         java ='SLASHSTAR_STYLE'
         groovy ='SLASHSTAR_STYLE'
     }
-    ext.year = '2015-2016'
-    ext.author = 'Stephan Classen'
     excludes(['**/*.png', '**/LICENSE', '**/sample.html', '**/*.ExtensionRegistry'])
 }
