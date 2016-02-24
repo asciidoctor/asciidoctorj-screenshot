@@ -1,0 +1,75 @@
+= AsciidoctorJ Screenshot
+
+This AsciidoctorJ extension automates the documentation of your webapp using screenshots.
+No more hassles when you change simple settings like CSS or change that button that was too big.
+Your documentation stays up to date!
+
+This extension is based on the work of https://github.com/fix/asciidoctor-screenshot[François-Xavier Thoorens]
+
+== Quick reference
+
+Basic usage is a block _takeScreenshot_ that points to a URL:
+The content of the block is used as the caption of the image.
+
+```
+[takeScreenshot, url=http://google.com, name=google]
+Google Landing page
+```
+
+Use a bloc _driveBrowser_ to control the browser (i.e. for filling in a form or doing a login)
+The content of the block is passed to http://www.gebish.org/[Geb]. Geb is then taking control of the browser.
+
+```
+[driveBrowser]
+go "http://google.com"
+$("input", name: "q").value("asciidoctor")
+waitFor(5){true}
+```
+=== Parameters
+
+==== takeScreenshot
+The _takeScreenshot_ block supports the following parameters:
+url:: the URL to point to. Optional. This is not needed when the browser was navigated to the page using a _driveBrowser_ block
+name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>`.png
+frame:: Try awesomeness with "IPHONE5", "NEXUS5" or "BROWSER".
+dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
+selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance "div #login_window".
+
+Note: it is not allowed to set 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
+
+==== driveBrowser
+The _driveBrowser_ block supports the following parameters:
+dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
+
+=== Examples
+
+```
+[takeScreenshot, name=google, url=http://google.com]
+The Google landing page
+```
+
+```
+[driveBrowser]
+$("input", name: "q").value("asciidoctor")
+waitFor(5){true}
+```
+
+```
+[takeScreenshot, frame=BROWSER]
+Some propositions should appear
+```
+
+```
+[driveBrowser, dimension=IPHONE5]
+  $("h3.r a").click()
+```
+
+```
+[takeScreenshot, frame=NEXUS5]
+Look Ma, it's Nexus 5!
+```
+
+== Demo
+
+coming soon...
+//See http://fix.github.io/asciidoctor-screenshot/demo/google.html[Google 101] or http://fix.github.io/asciidoctor-screenshot/demo[Asciidoctor 101].
