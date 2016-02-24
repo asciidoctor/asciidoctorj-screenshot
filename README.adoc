@@ -16,7 +16,7 @@ The content of the block is used as the caption of the image.
 Google Landing page
 ```
 
-Use a bloc _driveBrowser_ to control the browser (i.e. for filling in a form or doing a login)
+Use a block _driveBrowser_ to control the browser (i.e. for filling in a form or doing a login)
 The content of the block is passed to http://www.gebish.org/[Geb]. Geb is then taking control of the browser.
 
 ```
