@@ -29,6 +29,9 @@ import org.jruby.RubySymbol
 
 import static org.jruby.RubySymbol.newSymbol
 
+/**
+ * Block to take a screenshot using GEB.
+ */
 class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
 
     TakeScreenshotBlock(String name, RubyHash config) {

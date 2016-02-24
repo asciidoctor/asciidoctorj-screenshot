@@ -29,7 +29,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.Window
 
 /**
- * ...
+ * Trait which allows to resize the browser window. This is handy to trigger css media queries.
  */
 trait BrowserResizer {
 

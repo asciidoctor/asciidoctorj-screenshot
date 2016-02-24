@@ -26,7 +26,7 @@ package org.asciidoctor.extension
 import spock.lang.Specification
 
 /**
- * ...
+ * Unit test for {@link Frame}.
  */
 class FrameTest extends Specification {
 

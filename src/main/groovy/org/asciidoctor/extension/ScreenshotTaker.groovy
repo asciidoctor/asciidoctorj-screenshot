@@ -34,6 +34,11 @@ import java.awt.image.ImageObserver
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+/**
+ * Helper which is responsible for creating the screenshot.
+ * This class uses GEB to make a screenshot.
+ * Then the image is cropped if it is too big and optionally frame is added as the background.
+ */
 class ScreenshotTaker implements BrowserResizer {
     private static final Collection<Object> ALPHABET = ['A'..'Z', '0'..'9'].flatten()
     private static final int ALPHABET_SIZE = ALPHABET.size()
