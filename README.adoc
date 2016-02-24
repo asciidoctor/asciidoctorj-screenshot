@@ -25,9 +25,9 @@ go "http://google.com"
 $("input", name: "q").value("asciidoctor")
 waitFor(5){true}
 ```
-=== Parameters
+== Parameters
 
-==== takeScreenshot
+=== takeScreenshot
 
 The _takeScreenshot_ block supports the following parameters:
 
@@ -39,13 +39,13 @@ selector:: the CSS-like dom selector to screenshot. Only this will be part of th
 
 Note: it is not allowed to set 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
 
-==== driveBrowser
+=== driveBrowser
 
 The _driveBrowser_ block supports the following parameters:
 
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
 
-=== Examples
+== Examples
 
 ```
 [takeScreenshot, name=google, url=http://google.com]
@@ -72,8 +72,3 @@ Some propositions should appear
 [takeScreenshot, frame=NEXUS5]
 Look Ma, it's Nexus 5!
 ```
-
-== Demo
-
-coming soon...
-//See http://fix.github.io/asciidoctor-screenshot/demo/google.html[Google 101] or http://fix.github.io/asciidoctor-screenshot/demo[Asciidoctor 101].
