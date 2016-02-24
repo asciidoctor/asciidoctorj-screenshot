@@ -30,7 +30,7 @@ import spock.lang.Specification
 import java.security.MessageDigest
 
 /**
- * ...
+ * Unit test for {@link ScreenshotTaker}.
  */
 class ScreenshotTakerTest extends Specification {
 

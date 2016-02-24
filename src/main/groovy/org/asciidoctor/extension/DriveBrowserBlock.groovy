@@ -28,6 +28,9 @@ import org.asciidoctor.ast.AbstractBlock
 import org.jruby.RubyHash
 import org.openqa.selenium.Dimension
 
+/**
+ * Block to control the browser using GEB.
+ */
 class DriveBrowserBlock extends BlockProcessor implements BrowserResizer {
 
     DriveBrowserBlock(String name, RubyHash config) {

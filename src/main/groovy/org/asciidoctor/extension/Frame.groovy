@@ -27,7 +27,7 @@ import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 
 /**
- * ...
+ * Enum listing all currently available frames.
  */
 enum Frame {
 

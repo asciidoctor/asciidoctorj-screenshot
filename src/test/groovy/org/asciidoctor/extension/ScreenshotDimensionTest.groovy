@@ -27,7 +27,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 /**
- * ...
+ * Unit test for {@link ScreenshotDimension}.
  */
 class ScreenshotDimensionTest extends Specification {
 

@@ -24,7 +24,7 @@
 package org.asciidoctor.extension
 
 /**
- * ...
+ * Object holding the desired dimension of a screenshot.
  */
 class ScreenshotDimension {
 
