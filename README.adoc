@@ -32,10 +32,10 @@ waitFor(5){true}
 The _takeScreenshot_ block supports the following parameters:
 
 url:: the URL to point to. Optional. This is not needed when the browser was navigated to the page using a _driveBrowser_ block
-name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>`.png
-frame:: Try awesomeness with "IPHONE5", "NEXUS5" or "BROWSER".
+name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>.png`
+frame:: Try awesomeness with `IPHONE5`, `NEXUS5` or `BROWSER`.
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
-selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance "div #login_window".
+selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance `div #login_window`.
 
 Note: it is not allowed to set 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
 
