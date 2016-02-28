@@ -33,9 +33,9 @@ import static org.jruby.RubySymbol.newSymbol
 /**
  * Block to take a screenshot using GEB.
  */
-class TakeScreenshotBlock extends BlockMacroProcessor implements BrowserResizer {
+class TakeScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer {
 
-    TakeScreenshotBlock(String name, RubyHash config) {
+    TakeScreenshotMacroBlock(String name, RubyHash config) {
         super(name, [contexts: [':paragraph'], content_model: ':attributes'])
     }
 
