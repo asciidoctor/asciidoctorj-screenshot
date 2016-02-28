@@ -40,8 +40,8 @@ class TakeScreenshotBlockTest extends Specification {
 
 == Process
 
-[takeScreenshot, name=image1, url=${url}]
-caption
+.some Title
+takeScreenshot::${url}[name="image1"]
 
 """
 

@@ -33,22 +33,23 @@ import static org.jruby.RubySymbol.newSymbol
 /**
  * Block to take a screenshot using GEB.
  */
-class TakeScreenshotBlock extends BlockProcessor implements BrowserResizer {
+class TakeScreenshotBlock extends BlockMacroProcessor implements BrowserResizer {
 
     TakeScreenshotBlock(String name, RubyHash config) {
-        super(name, [contexts: [':paragraph'], content_model: ':simple'])
+        super(name, [contexts: [':paragraph'], content_model: ':attributes'])
     }
 
-    def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
-        final File buildDir = buildDir(block)
-        final String screenshotDirName = screenshotDirName(block)
+    def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
+        attributes.put('url', target)
+        final File buildDir = buildDir(parent)
+        final String screenshotDirName = screenshotDirName(parent)
         final File screenshotDir = new File(buildDir, screenshotDirName)
 
-        final File screenshotsFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
+        final File screenshotFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
 
-        createBlock(block, "image", "", [
-                target: screenshotDirName + '/' + screenshotsFile.name,
-                title : reader.lines().join(" // "),
+        createBlock(parent, "image", "", [
+                target: screenshotDirName + '/' + screenshotFile.name,
+                title : attributes['title'],
         ], [:])
     }
 
