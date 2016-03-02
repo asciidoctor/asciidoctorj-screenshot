@@ -145,7 +145,7 @@ class ScreenshotTaker implements BrowserResizer {
         }
 
         if (img.width < dim.width || img.height < dim.height) {
-            throw new IllegalStateException('image is smaller than the requested screenshot')
+            throw new IllegalStateException("image (${img.width}x${img.height}) is smaller than the requested screenshot (${dim.width}x${dim.height})")
         }
         if (w > dim.width - x) {
             throw new IllegalArgumentException("the selected element '$selector' is wider than the screenshot")
