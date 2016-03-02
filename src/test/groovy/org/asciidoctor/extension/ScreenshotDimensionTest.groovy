@@ -48,9 +48,9 @@ class ScreenshotDimensionTest extends Specification {
           '300x200' || 300 | 200
           '200x100' || 200 | 100
           '200x100' || 200 | 100
-          'BROWSER' || 800 | 600
-          'IPHONE5' || 320 | 568
-          'NEXUS5'  || 360 | 640
+          'browser' || 800 | 600
+          'iphone5' || 320 | 568
+          'nexus5'  || 360 | 640
     }
 
     @Unroll

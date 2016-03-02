@@ -96,7 +96,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot with dimension Nexus5 is equal to the expected 360x640'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'NEXUS5'])
+          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'nexus5'])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -125,7 +125,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'  : url,
-                  'frame': 'BROWSER'
+                  'frame': 'browser'
           ])
 
         when:
@@ -140,7 +140,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'  : url,
-                  'frame': 'IPHONE5'
+                  'frame': 'iphone5'
           ])
 
         when:
@@ -155,7 +155,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'  : url,
-                  'frame': 'NEXUS5'
+                  'frame': 'nexus5'
           ])
 
         when:
@@ -170,7 +170,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'      : url,
-                  'dimension': 'BROWSER',
+                  'dimension': 'browser',
                   'selector' : '.blubb'
           ])
 
@@ -218,7 +218,7 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'     : url,
-                  'frame'   : 'NEXUS5',
+                  'frame'   : 'nexus5',
                   'selector': '.circle'
           ])
 
@@ -234,8 +234,8 @@ class ScreenshotTakerTest extends Specification {
         given:
           ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
                   'url'      : url,
-                  'frame'    : 'NEXUS5',
-                  'dimension': 'NEXUS5'
+                  'frame'    : 'nexus5',
+                  'dimension': 'nexus5'
           ])
 
         when:
