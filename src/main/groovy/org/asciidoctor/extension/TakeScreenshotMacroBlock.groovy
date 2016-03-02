@@ -36,7 +36,7 @@ import static org.jruby.RubySymbol.newSymbol
 class TakeScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer {
 
     TakeScreenshotMacroBlock(String name, RubyHash config) {
-        super(name, [contexts: [':paragraph'], content_model: ':attributes'])
+        super(name, [contexts: [':paragraph'], content_model: ':attributes', pos_attrs: ['name', 'frame']])
     }
 
     def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
