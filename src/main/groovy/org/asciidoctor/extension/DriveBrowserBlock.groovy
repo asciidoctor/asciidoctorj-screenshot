@@ -35,7 +35,7 @@ import org.openqa.selenium.Dimension
 class DriveBrowserBlock extends BlockProcessor implements BrowserResizer {
 
     DriveBrowserBlock(String name, RubyHash config) {
-        super(name, [contexts: [':paragraph'], content_model: ':simple'])
+        super(name, [contexts: [':paragraph', ':literal'], content_model: ':simple', pos_attrs: ['dimension']])
     }
 
     def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
