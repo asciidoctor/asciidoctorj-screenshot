@@ -32,9 +32,9 @@ import java.awt.image.BufferedImage
  */
 enum Frame {
 
-    BROWSER('800x600', 'browser.png', 6, 71),
-    IPHONE5('320x568', 'iphone-5.png', 34, 118),
-    NEXUS5('360x640', 'nexus-5.png', 23, 68);
+    browser('800x600', 'browser.png', 6, 71),
+    iphone5('320x568', 'iphone-5.png', 34, 118),
+    nexus5('360x640', 'nexus-5.png', 23, 68);
 
     static Map<String, String> dimensions() {
         Map<String, String> result = [:]
