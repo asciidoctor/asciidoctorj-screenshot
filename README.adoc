@@ -8,12 +8,12 @@ This extension is based on the work of https://github.com/fix/asciidoctor-screen
 
 == Quick reference
 
-Basic usage is a block _takeScreenshot_ that points to a URL:
-The content of the block is used as the caption of the image.
+Basic usage is a block macro _takeScreenshot_ that points to a URL:
+The title of the block macro is used as the caption of the image.
 
 ```
-[takeScreenshot, url=http://google.com, name=google]
-Google Landing page
+.Google Landing page
+takeScreenshot::http://google.com[google]
 ```
 
 Use a block _driveBrowser_ to control the browser (i.e. for filling in a form or doing a login)
@@ -29,27 +29,28 @@ waitFor(5){true}
 
 === takeScreenshot
 
-The _takeScreenshot_ block supports the following parameters:
+The _takeScreenshot_ block macro has the syntax `takeScreenshot::<url>[<parameters>]` and supports the following parameters
+(note: the URL is not needed when the browser was navigated to the page using a _driveBrowser_ block or other means)
 
-url:: the URL to point to. Optional. This is not needed when the browser was navigated to the page using a _driveBrowser_ block
-name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>.png`
-frame:: Try awesomeness with `IPHONE5`, `NEXUS5` or `BROWSER`.
+name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>.png`. This is the first positional parameter.
+frame:: Try awesomeness with `iphone5`, `nexus5` or `browser`. This is the second positional parameter.
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
 selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance `div #login_window`.
 
-Note: it is not allowed to set 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
+Note: it is not allowed to set both 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
+Note: `takeScreenshot::http://google.com[google]` and `takeScreenshot::http://google.com[name=google]` are equivalent.
 
 === driveBrowser
 
 The _driveBrowser_ block supports the following parameters:
 
-dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
+dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported. This is the first positional parameter.
 
 == Examples
 
 ```
-[takeScreenshot, name=google, url=http://google.com]
-The Google landing page
+.The Google landing page
+takeScreenshot::http://google.com[google]
 ```
 
 ```
@@ -59,16 +60,16 @@ waitFor(5){true}
 ```
 
 ```
-[takeScreenshot, frame=BROWSER]
-Some propositions should appear
+.Some propositions should appear
+takeScreenshot::[frame=BROWSER]
 ```
 
 ```
-[driveBrowser, dimension=IPHONE5]
-  $("h3.r a").click()
+[driveBrowser, dimension=iphone5]
+$("h3.r a").click()
 ```
 
 ```
-[takeScreenshot, frame=NEXUS5]
-Look Ma, it's Nexus 5!
+.Look Ma, it's Nexus 5!
+takeScreenshot::[frame=nexus5]
 ```
