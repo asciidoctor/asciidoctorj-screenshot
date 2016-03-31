@@ -41,7 +41,7 @@ class ScreenshotMacroBlockTest extends Specification {
 == Process
 
 .some Title
-takeScreenshot::${url}[name="image1"]
+screenshot::${url}[name="image1"]
 
 """
 
