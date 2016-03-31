@@ -31,11 +31,11 @@ import org.jruby.RubySymbol
 import static org.jruby.RubySymbol.newSymbol
 
 /**
- * Block to take a screenshot using GEB.
+ * Block macro to take a screenshot.
  */
-class TakeScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer {
+class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer {
 
-    TakeScreenshotMacroBlock(String name, RubyHash config) {
+    ScreenshotMacroBlock(String name, RubyHash config) {
         super(name, [contexts: [':paragraph'], content_model: ':attributes', pos_attrs: ['name', 'frame']])
     }
 
