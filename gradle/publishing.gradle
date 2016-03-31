@@ -1,7 +1,43 @@
+def pomConfig = {
+    name project.name
+    description project.project_description
+    url project.project_url
+    inceptionYear '2016'
+    licenses {
+        license([:]) {
+            name 'MIT'
+            url 'https://opensource.org/licenses/MIT'
+            distribution 'repo'
+        }
+    }
+    scm {
+        url project.project_scm
+    }
+    developers {
+        [
+                sclassen : 'Stephan Classen',
+                madmas : 'Markus Schlichting'
+        ].each { devId, devName ->
+            developer {
+                id devId
+                name devName
+                roles {
+                    role 'Developer'
+                }
+            }
+        }
+    }
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifact sourcesJar
+
+            pom.withXml {
+                asNode().children().last() + pomConfig
+            }
         }
     }
 }
@@ -9,9 +45,22 @@ publishing {
 task install(dependsOn: publishToMavenLocal)
 
 if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+if (!project.hasProperty('bintrayUserName')) ext.bintrayUserName = ''
 
 bintray {
-    user = 'asciidoctor'
+    user = project.bintrayUserName
     key = project.bintrayApiKey
-    pkg.repo = 'maven'
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        userOrg = 'asciidoctor'
+        name = project.name
+        desc = project.project_description
+        licenses = ['MIT']
+        labels = ['asciidoctorj', 'screenshot']
+        websiteUrl = project.project_url
+        issueTrackerUrl = "${project.project_url}/issues".toString()
+        vcsUrl = project.project_scm
+        publicDownloadNumbers = true
+    }
 }
