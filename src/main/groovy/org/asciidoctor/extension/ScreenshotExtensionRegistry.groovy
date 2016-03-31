@@ -28,11 +28,11 @@ import org.asciidoctor.Asciidoctor
 import org.asciidoctor.extension.spi.ExtensionRegistry
 
 /**
- * Registry registring both block processors.
+ * Registry registering all processors.
  */
 class ScreenshotExtensionRegistry implements ExtensionRegistry {
     void register(Asciidoctor asciidoctor) {
-        asciidoctor.javaExtensionRegistry().block 'driveBrowser', DriveBrowserBlock
-        asciidoctor.javaExtensionRegistry().blockMacro 'takeScreenshot', TakeScreenshotMacroBlock
+        asciidoctor.javaExtensionRegistry().block 'geb', GebBlock
+        asciidoctor.javaExtensionRegistry().blockMacro 'screenshot', ScreenshotMacroBlock
     }
 }

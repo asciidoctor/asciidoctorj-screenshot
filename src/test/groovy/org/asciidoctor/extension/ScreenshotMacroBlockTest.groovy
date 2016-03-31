@@ -31,11 +31,11 @@ import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 /**
- * Integration test for {@link TakeScreenshotMacroBlock}.
+ * Integration test for {@link ScreenshotMacroBlock}.
  */
-class TakeScreenshotMacroBlockTest extends Specification {
+class ScreenshotMacroBlockTest extends Specification {
 
-    private static final String url = TakeScreenshotMacroBlockTest.classLoader.getResource("sample.html").toString()
+    private static final String url = ScreenshotMacroBlockTest.classLoader.getResource("sample.html").toString()
     private static final String document1 = """ = How to use Google properly
 
 == Process

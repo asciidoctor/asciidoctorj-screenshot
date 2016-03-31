@@ -32,13 +32,13 @@ import org.openqa.selenium.Dimension
 /**
  * Block to control the browser using GEB.
  */
-class DriveBrowserBlock extends BlockProcessor implements BrowserResizer {
+class GebBlock extends BlockProcessor implements BrowserResizer {
 
-    DriveBrowserBlock(String name, RubyHash config) {
+    GebBlock(String name, RubyHash config) {
         super(name, [contexts: [':paragraph', ':literal'], content_model: ':simple', pos_attrs: ['dimension']])
     }
 
-    def process(AbstractBlock block, Reader reader, Map<String, Object> attributes) {
+    def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
         final String dimension = attributes['dimension']
         if (dimension) {
             resizeBrowserWindow(dimension)
@@ -50,6 +50,6 @@ class DriveBrowserBlock extends BlockProcessor implements BrowserResizer {
 
         def shell = new GroovyShell(binding)
         shell.evaluate("Browser.drive{" + reader.lines().join("\n") + "}")
-        createBlock(block, "paragraph", "", [:], [:])
+        createBlock(parent, "skip", "", [:], [:])
     }
 }
