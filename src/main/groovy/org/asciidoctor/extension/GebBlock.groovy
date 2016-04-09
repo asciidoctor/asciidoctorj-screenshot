@@ -45,13 +45,19 @@ class GebBlock extends BlockProcessor implements BrowserResizer {
             resizeBrowserWindow(dimension)
         }
 
-        def binding = new Binding()
-        binding.setVariable("Browser", Browser)
-        binding.setVariable("Dimension", Dimension)
-        binding.setVariable("Keys", Keys)
+        String gebCode = reader.lines().join("\n")
+        GroovyShell shell = new GroovyShell(binding(Browser, Dimension, Keys))
 
-        def shell = new GroovyShell(binding)
-        shell.evaluate("Browser.drive{" + reader.lines().join("\n") + "}")
+        shell.evaluate('Browser.drive{' + gebCode + '}')
+
         createBlock(parent, "skip", "", [:], [:])
+    }
+
+    private static Binding binding(Class... classes) {
+        Binding result = new Binding()
+        classes.each {
+            result.setVariable(it.simpleName, it)
+        }
+        return result
     }
 }
