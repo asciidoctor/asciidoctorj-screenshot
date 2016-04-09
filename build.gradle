@@ -33,5 +33,5 @@ license {
         java ='SLASHSTAR_STYLE'
         groovy ='SLASHSTAR_STYLE'
     }
-    excludes(['**/*.png', '**/LICENSE', '**/sample.html', '**/*.ExtensionRegistry'])
+    excludes(['**/*.png', '**/LICENSE', '**/form.html', '**/sample.html', '**/*.ExtensionRegistry'])
 }

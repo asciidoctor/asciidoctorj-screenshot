@@ -24,34 +24,49 @@
  */
 package org.asciidoctor.extension
 
-import geb.Browser
-import org.asciidoctor.ast.AbstractBlock
-import org.jruby.RubyHash
-import org.openqa.selenium.Dimension
-import org.openqa.selenium.Keys
+import org.asciidoctor.Asciidoctor
+import org.asciidoctor.Options
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
+import spock.lang.Specification
 
 /**
- * Block to control the browser using GEB.
+ * Integration test for {@link ScreenshotMacroBlock}.
  */
-class GebBlock extends BlockProcessor implements BrowserResizer {
+class GebBlockTest extends Specification {
 
-    GebBlock(String name, RubyHash config) {
-        super(name, [contexts: [':paragraph', ':literal'], content_model: ':simple', pos_attrs: ['dimension']])
+    private static final String url = GebBlockTest.classLoader.getResource("sample.html").toString()
+    private static final String document1 = """ = How to use Google properly
+
+== Process
+
+[geb]
+....
+go '${url}'
+\$('input') << Keys.ENTER
+....
+
+"""
+
+    @Rule
+    TemporaryFolder tmpFolder = new TemporaryFolder()
+    private File outputDir
+    private Options options
+    private Asciidoctor asciidoctor
+
+    void setup() {
+        outputDir = tmpFolder.newFolder()
+        options = new Options()
+        options.setDestinationDir(outputDir.absolutePath)
+
+        asciidoctor = Asciidoctor.Factory.create()
     }
 
-    def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
-        final String dimension = attributes['dimension']
-        if (dimension) {
-            resizeBrowserWindow(dimension)
-        }
+    def "test keys in geb block"() {
+        when:
+          String html = asciidoctor.convert(document1, options)
 
-        def binding = new Binding()
-        binding.setVariable("Browser", Browser)
-        binding.setVariable("Dimension", Dimension)
-        binding.setVariable("Keys", Keys)
-
-        def shell = new GroovyShell(binding)
-        shell.evaluate("Browser.drive{" + reader.lines().join("\n") + "}")
-        createBlock(parent, "skip", "", [:], [:])
+        then:
+          true
     }
 }
