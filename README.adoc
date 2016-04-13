@@ -1,10 +1,9 @@
 = AsciidoctorJ Screenshot Extension
+Stephan Classen <https://github.com/sclassen[@sclassen]>; François-Xavier Thoorens <https://github.com/fix[@fix]>
 
 This AsciidoctorJ extension automates the documentation of your webapp using screenshots.
 No more hassles when you change simple settings like CSS or change that button that was too big.
 Your documentation stays up to date!
-
-This extension is based on the work of https://github.com/fix/asciidoctor-screenshot[François-Xavier Thoorens]
 
 == Quick reference
 
