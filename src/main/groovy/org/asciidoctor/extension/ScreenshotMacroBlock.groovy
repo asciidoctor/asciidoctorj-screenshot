@@ -27,6 +27,8 @@ package org.asciidoctor.extension
 import org.asciidoctor.ast.AbstractBlock
 import org.jruby.RubyHash
 import org.jruby.RubySymbol
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 import static org.jruby.RubySymbol.newSymbol
 
@@ -40,7 +42,7 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
     }
 
     def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
-        attributes.put('url', target)
+        attributes.put('url', expandAttributesInTarget(target, parent))
         final File buildDir = buildDir(parent)
         final String screenshotDirName = screenshotDirName(parent)
         final File screenshotDir = new File(buildDir, screenshotDirName)
@@ -51,6 +53,39 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
                 target: screenshotDirName + '/' + screenshotFile.name,
                 title : attributes['title'],
         ], [:])
+    }
+
+    //TODO this method should be removed when AsciidoctorJ provides a resolve_subs method to extensions.
+    private String expandAttributesInTarget(String target, AbstractBlock block) {
+        Matcher m = checkInputAgainstPattern(target, ~/\{[A-Za-z0-9_][A-Za-z0-9_-]+\}/)
+
+        String url = target;
+        if (m) {
+            for (int i = 0; i < m.size(); i++) {
+                url = replaceAttribute(url, m[i].toString(), block.document.attributes)
+            }
+        }
+
+        return url;
+    }
+
+    private String replaceAttribute(String url, String attribute, Map<String, Object> documentAttributes) {
+        // attribute is on the form '{attribute}'
+        String attributeName = attribute.substring(1, attribute.length() - 1)
+
+        if (!documentAttributes.containsKey(attributeName)) {
+            throw new IllegalArgumentException("${attributeName} is not set in the document so it cannot be expanded.")
+        }
+
+        return url.replace(attribute, documentAttributes.get(attributeName))
+    }
+
+    private Matcher checkInputAgainstPattern(String input, Pattern pattern) {
+        if (!(input ==~ pattern)) {
+            return null
+        }
+
+        input =~ pattern
     }
 
     private File buildDir(AbstractBlock block) {
