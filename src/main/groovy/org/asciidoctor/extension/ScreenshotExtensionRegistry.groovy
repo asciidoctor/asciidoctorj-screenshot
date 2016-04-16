@@ -34,6 +34,6 @@ class ScreenshotExtensionRegistry implements ExtensionRegistry {
     void register(Asciidoctor asciidoctor) {
         asciidoctor.javaExtensionRegistry().block 'geb', GebBlock
         asciidoctor.javaExtensionRegistry().blockMacro 'screenshot', ScreenshotMacroBlock
-        asciidoctor.javaExtensionRegistry().postprocessor new ShutdownGebPostProcessor()
+        asciidoctor.javaExtensionRegistry().postprocessor ShutdownGebPostProcessor
     }
 }

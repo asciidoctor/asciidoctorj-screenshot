@@ -26,6 +26,7 @@ package org.asciidoctor.extension
 
 import geb.driver.CachingDriverFactory
 import org.asciidoctor.ast.Document
+import org.asciidoctor.ast.DocumentRuby
 
 /**
  * Post processor which does not change the output.
@@ -34,8 +35,8 @@ import org.asciidoctor.ast.Document
  */
 class ShutdownGebPostProcessor extends Postprocessor {
 
-    ShutdownGebPostProcessor() {
-        super([:])
+    ShutdownGebPostProcessor(DocumentRuby documentRuby) {
+        super()
     }
 
     @Override
