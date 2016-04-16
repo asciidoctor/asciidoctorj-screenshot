@@ -24,16 +24,23 @@
  */
 package org.asciidoctor.extension
 
-import org.asciidoctor.Asciidoctor
-import org.asciidoctor.extension.spi.ExtensionRegistry
+import geb.driver.CachingDriverFactory
+import org.asciidoctor.ast.Document
 
 /**
- * Registry registering all processors.
+ * Post processor which does not change the output.
+ *
+ * It is used to quit the browser after the asciidoctor has finished processing the document.
  */
-class ScreenshotExtensionRegistry implements ExtensionRegistry {
-    void register(Asciidoctor asciidoctor) {
-        asciidoctor.javaExtensionRegistry().block 'geb', GebBlock
-        asciidoctor.javaExtensionRegistry().blockMacro 'screenshot', ScreenshotMacroBlock
-        asciidoctor.javaExtensionRegistry().postprocessor new ShutdownGebPostProcessor()
+class ShutdownGebPostProcessor extends Postprocessor {
+
+    ShutdownGebPostProcessor() {
+        super([:])
+    }
+
+    @Override
+    String process(Document document, String output) {
+        CachingDriverFactory.clearCacheAndQuitDriver()
+        return output
     }
 }
