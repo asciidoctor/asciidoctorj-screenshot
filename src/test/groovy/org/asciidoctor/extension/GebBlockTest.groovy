@@ -35,7 +35,7 @@ import spock.lang.Specification
  */
 class GebBlockTest extends Specification {
 
-    private static final String url = GebBlockTest.classLoader.getResource("sample.html").toString()
+    private static final String url = GebBlockTest.classLoader.getResource("form.html").toString()
     private static final String document1 = """ = How to use Google properly
 
 == Process
