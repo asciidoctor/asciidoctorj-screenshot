@@ -33,7 +33,7 @@ import spock.lang.Specification
 import javax.imageio.ImageIO
 
 /**
- * Integration test for substituting attributes in teh screenshot macro.
+ * Integration test for substituting attributes in the screenshot macro.
  */
 class ScreenshotMacroSubstitutionTest extends Specification {
 
