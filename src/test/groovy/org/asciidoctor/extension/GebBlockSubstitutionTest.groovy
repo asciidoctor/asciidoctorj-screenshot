@@ -39,12 +39,13 @@ class GebBlockSubstitutionTest extends Specification {
     private static final String document1 = """= Test substitution
 
 :dimension: 100x100
+:url: ${url}
 
 == Process
 
 [geb, dimension={dimension}]
 ....
-go '${url}'
+go adocAttrs['url']
 ....
 
 """
