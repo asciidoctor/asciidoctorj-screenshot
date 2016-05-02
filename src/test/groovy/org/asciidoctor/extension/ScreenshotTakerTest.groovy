@@ -28,8 +28,6 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
-import java.security.MessageDigest
-
 /**
  * Unit test for {@link ScreenshotTaker}.
  */
@@ -80,7 +78,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_800x600.png')
+          compareImages(screenshot, 'screenshot_800x600.png')
     }
 
     def 'screenshot with dimension 800x600 is equal to the expected 800x600'() {
@@ -91,7 +89,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_800x600.png')
+          compareImages(screenshot, 'screenshot_800x600.png')
     }
 
     def 'screenshot with dimension Nexus5 is equal to the expected 360x640'() {
@@ -102,7 +100,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_nexus5.png')
+          compareImages(screenshot, 'screenshot_nexus5.png')
     }
 
 
@@ -118,7 +116,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          getChecksum(screenshot) == getChecksum('screenshot_circle.png')
+          compareImages(screenshot, 'screenshot_circle.png')
     }
 
     def 'screenshot of with frame browser is equal to the expected'() {
@@ -132,8 +130,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          screenshot.exists()
-          getChecksum(screenshot) == getChecksum('screenshot_frame_browser.png')
+          compareImages(screenshot, 'screenshot_frame_browser.png')
     }
 
     def 'screenshot of with frame iPhone5 is equal to the expected'() {
@@ -147,8 +144,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          screenshot.exists()
-          getChecksum(screenshot) == getChecksum('screenshot_frame_iphone5.png')
+          compareImages(screenshot, 'screenshot_frame_iphone5.png')
     }
 
     def 'screenshot of with frame Nexus5 is equal to the expected'() {
@@ -162,8 +158,7 @@ class ScreenshotTakerTest extends Specification {
           File screenshot = sut.takeScreenshot()
 
         then:
-          screenshot.exists()
-          getChecksum(screenshot) == getChecksum('screenshot_frame_nexus5.png')
+          compareImages(screenshot, 'screenshot_frame_nexus5.png')
     }
 
     def 'screenshot of inexistent selector should throw an exception'() {
@@ -247,20 +242,13 @@ class ScreenshotTakerTest extends Specification {
     }
 
 
-    private byte[] getChecksum(String expected) {
-        File f = getClass().classLoader.getResource(expected).file as File
-        getChecksum(f)
-    }
+    private boolean compareImages(File screenshot, String expectedImageName) {
+        File expectedImage = getClass().classLoader.getResource(expectedImageName).file as File
 
-    private static byte[] getChecksum(file) {
-        MessageDigest digest = MessageDigest.getInstance('MD5')
-        InputStream fileStream = file.newInputStream()
-        byte[] buffer = new byte[16384]
-        int len
-
-        while ((len = fileStream.read(buffer)) > 0) {
-            digest.update(buffer, 0, len)
+        double diff = ImageDiffCalculator.compare(screenshot, expectedImage)
+        if (diff > 0.1) {
+            throw new RuntimeException("diff in image was $diff")
         }
-        digest.digest()
+        return true
     }
 }
