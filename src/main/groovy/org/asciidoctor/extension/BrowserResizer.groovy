@@ -46,8 +46,8 @@ trait BrowserResizer {
         int viewportWidth = driver.executeScript("return document.documentElement.clientWidth")
         int viewportHeight = driver.executeScript("return document.documentElement.clientHeight")
 
-        int viewportDeltaX = min(size.width - viewportWidth, 50)
-        int viewportDeltaY = min(size.height - viewportHeight, 50)
+        int viewportDeltaX = min(size.width - viewportWidth, 100)
+        int viewportDeltaY = min(size.height - viewportHeight, 100)
 
         window.size = new Dimension(dim.width + viewportDeltaX, dim.height + viewportDeltaY)
 
