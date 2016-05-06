@@ -31,25 +31,28 @@ import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 /**
- * Integration test for {@link ScreenshotMacroBlock}.
+ * Integration test for substituting attributes in the geb block.
  */
-class GebBlockTest extends Specification {
+class GebBlockSubstitutionTest extends Specification {
 
-    private static final String url = GebBlockTest.classLoader.getResource("form.html").toString()
-    private static final String document1 = """ = How to use Google properly
+    private static final String url = GebBlockSubstitutionTest.classLoader.getResource("form.html").toString()
+    private static final String document1 = """= Test substitution
+
+:dimension: 100x100
+:url: ${url}
 
 == Process
 
-[geb]
+[geb, dimension={dimension}]
 ....
-go '${url}'
-\$('input') << Keys.ENTER
+go adocAttrs['url']
 ....
 
 """
 
     @Rule
     TemporaryFolder tmpFolder = new TemporaryFolder()
+
     private File outputDir
     private Options options
     private Asciidoctor asciidoctor

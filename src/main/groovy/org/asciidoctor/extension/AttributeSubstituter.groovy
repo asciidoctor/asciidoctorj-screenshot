@@ -24,49 +24,46 @@
  */
 package org.asciidoctor.extension
 
-import org.asciidoctor.Asciidoctor
-import org.asciidoctor.Options
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import spock.lang.Specification
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
- * Integration test for {@link ScreenshotMacroBlock}.
+ * Block macro to take a screenshot.
  */
-class GebBlockTest extends Specification {
+trait AttributeSubstituter {
 
-    private static final String url = GebBlockTest.classLoader.getResource("form.html").toString()
-    private static final String document1 = """ = How to use Google properly
+    private final Pattern attributePattern = ~/\{[A-Za-z0-9_][A-Za-z0-9_-]*\}/
 
-== Process
+    String substituteAttributesInText(String text, Map<String, Object> attributes) {
+        Matcher m = checkInputAgainstPattern(text)
 
-[geb]
-....
-go '${url}'
-\$('input') << Keys.ENTER
-....
+        String result = text;
+        if (m) {
+            for (int i = 0; i < (int) m.size(); i++) {
+                result = replaceAttribute(result, m[i].toString(), attributes)
+            }
+        }
 
-"""
-
-    @Rule
-    TemporaryFolder tmpFolder = new TemporaryFolder()
-    private File outputDir
-    private Options options
-    private Asciidoctor asciidoctor
-
-    void setup() {
-        outputDir = tmpFolder.newFolder()
-        options = new Options()
-        options.setDestinationDir(outputDir.absolutePath)
-
-        asciidoctor = Asciidoctor.Factory.create()
+        return result;
     }
 
-    def "test keys in geb block"() {
-        when:
-          asciidoctor.convert(document1, options)
+    private Matcher checkInputAgainstPattern(String input) {
+        if (!(input ==~ attributePattern)) {
+            return null
+        }
 
-        then:
-          true
+        input =~ attributePattern
     }
+
+    private String replaceAttribute(String text, String attribute, Map<String, Object> documentAttributes) {
+        // attribute is on the form '{attribute}'
+        String attributeName = attribute.substring(1, attribute.length() - 1)
+
+        if (!documentAttributes.containsKey(attributeName)) {
+            throw new IllegalArgumentException("${attributeName} is not set in the document so it cannot be expanded.")
+        }
+
+        return text.replace(attribute, documentAttributes.get(attributeName).toString())
+    }
+
 }

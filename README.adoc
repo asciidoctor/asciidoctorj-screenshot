@@ -20,9 +20,11 @@ The content of the block is passed to http://www.gebish.org/[Geb]. Geb is then t
 
 ```
 [geb]
+....
 go "http://google.com"
 $("input", name: "q").value("asciidoctor")
 waitFor(5){true}
+....
 ```
 == Parameters
 
@@ -45,6 +47,13 @@ The _geb_ block supports the following parameters:
 
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported. This is the first positional parameter.
 
+The content of the geb block can be any valid groovy script. The following bindings are defined and my be used within the script:
+
+Browser:: The class `geb.Browser`
+Dimension:: The class `org.openqa.selenium.Dimension`
+Keys:: The class `org.openqa.selenium.Keys`
+adocAttrs:: a map containing all attributes defined in the current asciidoc file (including the attributes of the geb block). This is useful to pass information like an URL, username, password, etc. to the script.
+
 == Examples
 
 ```
@@ -54,8 +63,10 @@ screenshot::http://google.com[google]
 
 ```
 [geb]
+....
 $("input", name: "q").value("asciidoctor")
 waitFor(5){true}
+....
 ```
 
 ```
@@ -65,7 +76,9 @@ screenshot::[frame=BROWSER]
 
 ```
 [geb, dimension=iphone5]
+....
 $("h3.r a").click()
+....
 ```
 
 ```

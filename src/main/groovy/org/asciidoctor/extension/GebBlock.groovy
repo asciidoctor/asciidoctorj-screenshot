@@ -46,18 +46,24 @@ class GebBlock extends BlockProcessor implements BrowserResizer {
         }
 
         String gebCode = reader.lines().join("\n")
-        GroovyShell shell = new GroovyShell(binding(Browser, Dimension, Keys))
+        GroovyShell shell = new GroovyShell(binding(parent, attributes))
 
         shell.evaluate('Browser.drive{' + gebCode + '}')
 
         createBlock(parent, "skip", "", [:], [:])
     }
 
-    private static Binding binding(Class... classes) {
+    private Binding binding(AbstractBlock parent, Map<String, Object> attributes) {
         Binding result = new Binding()
-        classes.each {
+
+        [Browser, Dimension, Keys].each {
             result.setVariable(it.simpleName, it)
         }
+
+        final Map<String, Object> adocAttrs = new HashMap<>(parent.document.attributes)
+        adocAttrs.putAll(attributes)
+        result.setVariable('adocAttrs', adocAttrs)
+
         return result
     }
 }
