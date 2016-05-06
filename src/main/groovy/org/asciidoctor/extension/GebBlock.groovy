@@ -32,7 +32,7 @@ import org.openqa.selenium.Keys
 /**
  * Block to control the browser using GEB.
  */
-class GebBlock extends BlockProcessor implements BrowserResizer {
+class GebBlock extends BlockProcessor implements DriverSelector, BrowserResizer {
 
     private final Browser browser
 
@@ -43,6 +43,8 @@ class GebBlock extends BlockProcessor implements BrowserResizer {
 
     @Override
     def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
+        setGebDriver(browser, parent.document.attributes, attributes)
+
         final String dimension = attributes['dimension']
         if (dimension) {
             resizeBrowserWindow(browser, dimension)

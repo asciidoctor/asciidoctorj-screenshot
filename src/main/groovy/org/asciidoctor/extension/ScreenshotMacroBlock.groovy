@@ -33,7 +33,7 @@ import static org.jruby.RubySymbol.newSymbol
 /**
  * Block macro to take a screenshot.
  */
-class ScreenshotMacroBlock extends BlockMacroProcessor implements AttributeSubstituter {
+class ScreenshotMacroBlock extends BlockMacroProcessor implements DriverSelector, AttributeSubstituter {
 
     private final Browser browser
 
@@ -44,6 +44,8 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements AttributeSubst
 
     @Override
     def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
+        setGebDriver(browser, parent.document.attributes, attributes)
+
         attributes.put('url', substituteAttributesInText(target, parent.document.attributes))
         final File buildDir = buildDir(parent)
         final String screenshotDirName = screenshotDirName(parent)
