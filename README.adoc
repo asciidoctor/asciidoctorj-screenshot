@@ -52,7 +52,7 @@ The content of the geb block can be any valid groovy script. The following bindi
 Browser:: The class `geb.Browser`
 Dimension:: The class `org.openqa.selenium.Dimension`
 Keys:: The class `org.openqa.selenium.Keys`
-adocAttrs:: a map containing all attributes defined in the current asciidoc file (including the attributes of the geb block). This is useful to pass information like an URL, username, password, etc. to the script.
+asciidoc:: a map containing all attributes defined in the current asciidoc file (including the attributes of the geb block). This is useful to pass information like an URL, username, password, etc. to the script.
 
 == Examples
 

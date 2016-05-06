@@ -45,7 +45,7 @@ class GebBlockSubstitutionTest extends Specification {
 
 [geb, dimension={dimension}]
 ....
-go adocAttrs['url']
+go asciidoc['url']
 ....
 
 """
