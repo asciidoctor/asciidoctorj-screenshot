@@ -28,7 +28,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Block macro to take a screenshot.
+ * Trait for substituting attributes within a macro.
  */
 trait AttributeSubstituter {
 
