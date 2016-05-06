@@ -36,10 +36,10 @@ import static java.lang.Integer.min
  */
 trait BrowserResizer {
 
-    ScreenshotDimension resizeBrowserWindow(String dimension) {
+    ScreenshotDimension resizeBrowserWindow(Browser browser, String dimension) {
         ScreenshotDimension dim = new ScreenshotDimension(dimension)
 
-        WebDriver driver = Browser.drive({}).driver
+        WebDriver driver = browser.driver
         Window window = driver.manage().window()
         Dimension size = window.size
 

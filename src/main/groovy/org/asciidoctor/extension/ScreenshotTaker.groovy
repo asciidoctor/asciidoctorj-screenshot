@@ -51,8 +51,10 @@ class ScreenshotTaker implements BrowserResizer {
     private final String selector
     private final String fileName
     private final File imageFile
+    private final Browser browser
 
-    ScreenshotTaker(File screenshotDir, Map<String, Object> attributes) {
+    ScreenshotTaker(Browser browser, File screenshotDir, Map<String, Object> attributes) {
+        this.browser = browser
         this.screenshotDir = screenshotDir
         this.dimension = attributes['dimension']
         this.frame = attributes['frame']
@@ -95,27 +97,24 @@ class ScreenshotTaker implements BrowserResizer {
 
     private ScreenshotDimension resizeBrowserIfNecessary() {
         if (frame) {
-            resizeBrowserWindow(frame)
+            resizeBrowserWindow(browser, frame)
         } else if (dimension) {
-            resizeBrowserWindow(dimension)
+            resizeBrowserWindow(browser, dimension)
         } else {
             new ScreenshotDimension(800, 600)
         }
     }
 
     private BufferedImage rawScreenshot() {
-        Browser.drive {
-            Browser browser = delegate as Browser
-            browser.config.reporter = new ScreenshotReporter()
-            browser.config.reportsDir = screenshotDir
+        browser.config.reporter = new ScreenshotReporter()
+        browser.config.reportsDir = screenshotDir
 
-            if (url) {
-                go url
-                waitFor(1) { true }
-            }
-
-            report fileName
+        if (url) {
+            browser.go(url)
+            browser.waitFor(1, { true })
         }
+
+        browser.report(fileName)
 
         ImageIO.read(imageFile)
     }
@@ -124,10 +123,7 @@ class ScreenshotTaker implements BrowserResizer {
         final int x, y, w, h
 
         if (selector) {
-            Navigator element = null
-            Browser.drive {
-                element = $(selector)
-            }
+            Navigator element = browser.$(selector)
 
             if (element == null || element.isEmpty()) {
                 throw new IllegalArgumentException("Selector '$selector' did not match any content in the page")

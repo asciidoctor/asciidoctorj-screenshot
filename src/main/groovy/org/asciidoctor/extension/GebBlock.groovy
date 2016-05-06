@@ -26,7 +26,6 @@ package org.asciidoctor.extension
 
 import geb.Browser
 import org.asciidoctor.ast.AbstractBlock
-import org.jruby.RubyHash
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.Keys
 
@@ -35,26 +34,32 @@ import org.openqa.selenium.Keys
  */
 class GebBlock extends BlockProcessor implements BrowserResizer {
 
-    GebBlock(String name, RubyHash config) {
+    private final Browser browser
+
+    GebBlock(String name, Browser browser) {
         super(name, [contexts: [':paragraph', ':literal'], content_model: ':simple', pos_attrs: ['dimension']])
+        this.browser = browser
     }
 
+    @Override
     def process(AbstractBlock parent, Reader reader, Map<String, Object> attributes) {
         final String dimension = attributes['dimension']
         if (dimension) {
-            resizeBrowserWindow(dimension)
+            resizeBrowserWindow(browser, dimension)
         }
 
         String gebCode = reader.lines().join("\n")
         GroovyShell shell = new GroovyShell(binding(parent, attributes))
 
-        shell.evaluate('Browser.drive{' + gebCode + '}')
+        shell.evaluate('Browser.drive(browser, {' + gebCode + '})')
 
         createBlock(parent, "skip", "", [:], [:])
     }
 
     private Binding binding(AbstractBlock parent, Map<String, Object> attributes) {
         Binding result = new Binding()
+
+        result.setVariable('browser', browser)
 
         [Browser, Dimension, Keys].each {
             result.setVariable(it.simpleName, it)

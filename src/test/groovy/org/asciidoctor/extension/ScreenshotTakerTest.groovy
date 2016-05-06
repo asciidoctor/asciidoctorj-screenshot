@@ -24,6 +24,7 @@
  */
 package org.asciidoctor.extension
 
+import geb.Browser
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -40,14 +41,16 @@ class ScreenshotTakerTest extends Specification {
 
     private String url = getClass().classLoader.getResource("sample.html").toString()
     private File outputDir
+    private Browser browser
 
     void setup() {
+        browser = new Browser()
         outputDir = tmpFolder.newFolder()
     }
 
     def 'screenshot is placed into output directory'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url])
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, ['url': url])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -60,7 +63,7 @@ class ScreenshotTakerTest extends Specification {
     def 'screenshot is has given name'() {
         given:
 
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'name': NAME])
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, ['url': url, 'name': NAME])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -72,7 +75,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot without dimension is equal to the expected 800x600'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url])
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, ['url': url])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -83,7 +86,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot with dimension 800x600 is equal to the expected 800x600'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': '800x600'])
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, ['url': url, 'dimension': '800x600'])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -94,7 +97,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot with dimension Nexus5 is equal to the expected 360x640'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, ['url': url, 'dimension': 'nexus5'])
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, ['url': url, 'dimension': 'nexus5'])
 
         when:
           File screenshot = sut.takeScreenshot()
@@ -106,7 +109,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of circle is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'      : url,
                   'dimension': '800x600',
                   'selector' : '.circle'
@@ -121,7 +124,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of with frame browser is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'  : url,
                   'frame': 'browser'
           ])
@@ -135,7 +138,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of with frame iPhone5 is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'  : url,
                   'frame': 'iphone5'
           ])
@@ -149,7 +152,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of with frame Nexus5 is equal to the expected'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'  : url,
                   'frame': 'nexus5'
           ])
@@ -163,7 +166,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of inexistent selector should throw an exception'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'      : url,
                   'dimension': 'browser',
                   'selector' : '.blubb'
@@ -179,7 +182,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of circle with width 300 should throw an exception'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'      : url,
                   'dimension': '300x1000',
                   'selector' : '.circle'
@@ -195,7 +198,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'screenshot of circle with height 300 should throw an exception'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'      : url,
                   'dimension': '1000x300',
                   'selector' : '.circle'
@@ -211,7 +214,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'specifying frame and selector should throw an exception'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'     : url,
                   'frame'   : 'nexus5',
                   'selector': '.circle'
@@ -227,7 +230,7 @@ class ScreenshotTakerTest extends Specification {
 
     def 'specifying frame and dimension should throw an exception'() {
         given:
-          ScreenshotTaker sut = new ScreenshotTaker(outputDir, [
+          ScreenshotTaker sut = new ScreenshotTaker(browser, outputDir, [
                   'url'      : url,
                   'frame'    : 'nexus5',
                   'dimension': 'nexus5'

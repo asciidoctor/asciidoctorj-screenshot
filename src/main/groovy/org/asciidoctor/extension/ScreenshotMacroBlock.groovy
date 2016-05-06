@@ -24,8 +24,8 @@
  */
 package org.asciidoctor.extension
 
+import geb.Browser
 import org.asciidoctor.ast.AbstractBlock
-import org.jruby.RubyHash
 import org.jruby.RubySymbol
 
 import static org.jruby.RubySymbol.newSymbol
@@ -33,19 +33,23 @@ import static org.jruby.RubySymbol.newSymbol
 /**
  * Block macro to take a screenshot.
  */
-class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer, AttributeSubstituter {
+class ScreenshotMacroBlock extends BlockMacroProcessor implements AttributeSubstituter {
 
-    ScreenshotMacroBlock(String name, RubyHash config) {
+    private final Browser browser
+
+    ScreenshotMacroBlock(String name, Browser browser) {
         super(name, [contexts: [':paragraph'], content_model: ':attributes', pos_attrs: ['name', 'frame']])
+        this.browser = browser
     }
 
+    @Override
     def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
         attributes.put('url', substituteAttributesInText(target, parent.document.attributes))
         final File buildDir = buildDir(parent)
         final String screenshotDirName = screenshotDirName(parent)
         final File screenshotDir = new File(buildDir, screenshotDirName)
 
-        final File screenshotFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
+        final File screenshotFile = new ScreenshotTaker(browser, screenshotDir, attributes).takeScreenshot()
 
         createBlock(parent, "image", "", [
                 target: screenshotDirName + '/' + screenshotFile.name,

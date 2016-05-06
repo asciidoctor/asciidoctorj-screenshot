@@ -24,6 +24,7 @@
  */
 package org.asciidoctor.extension
 
+import geb.Browser
 import org.asciidoctor.Asciidoctor
 import org.asciidoctor.extension.spi.ExtensionRegistry
 
@@ -32,8 +33,10 @@ import org.asciidoctor.extension.spi.ExtensionRegistry
  */
 class ScreenshotExtensionRegistry implements ExtensionRegistry {
     void register(Asciidoctor asciidoctor) {
-        asciidoctor.javaExtensionRegistry().block 'geb', GebBlock
-        asciidoctor.javaExtensionRegistry().blockMacro 'screenshot', ScreenshotMacroBlock
-        asciidoctor.javaExtensionRegistry().postprocessor ShutdownGebPostProcessor
+        Browser browser = new Browser()
+
+        asciidoctor.javaExtensionRegistry().block('geb', new GebBlock('geb', browser))
+        asciidoctor.javaExtensionRegistry().blockMacro(new ScreenshotMacroBlock('screenshot', browser))
+        asciidoctor.javaExtensionRegistry().postprocessor(ShutdownGebPostProcessor)
     }
 }
