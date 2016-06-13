@@ -1,0 +1,29 @@
+<html>
+<head>
+    <style>
+
+        div {
+            position: fixed;
+            top: 50px;
+            left: 50px;
+        }
+
+        /* chrome */
+        @supports (-webkit-appearance:none) {
+            .ff {
+                visibility: hidden;
+            }
+        }
+
+        /* firefox */
+        _:-moz-tree-row(hover), .ch {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ch"><h1>This is Chrome</h1></div>
+    <div class="ff"><h1>This is Firefox</h1></div>
+</body>
+</html>

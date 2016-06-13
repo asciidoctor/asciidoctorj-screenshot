@@ -29,6 +29,8 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
+import static org.asciidoctor.extension.ImageDiffCalculator.compareImages
+
 /**
  * Unit test for {@link ScreenshotTaker}.
  */
@@ -244,14 +246,4 @@ class ScreenshotTakerTest extends Specification {
           e.message == 'frame and dimension may not be specified for the same screenshot'
     }
 
-
-    private boolean compareImages(File screenshot, String expectedImageName) {
-        File expectedImage = getClass().classLoader.getResource(expectedImageName).file as File
-
-        double diff = ImageDiffCalculator.compare(screenshot, expectedImage)
-        if (diff > 0.1) {
-            throw new RuntimeException("diff in image was $diff")
-        }
-        return true
-    }
 }

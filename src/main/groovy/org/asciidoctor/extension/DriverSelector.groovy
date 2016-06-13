@@ -33,21 +33,25 @@ import geb.driver.CachingDriverFactory
 trait DriverSelector {
 
     private static final String GEB_DRIVER = 'geb.driver'
+    private static final String GEB_DRIVER2 = 'gebdriver'
 
     void setGebDriver(Browser browser, Map<String, Object> globalAttributes, Map<String, Object> attributes) {
         if (attributes.containsKey(GEB_DRIVER)) {
-            setGebDriver(browser, attributes[GEB_DRIVER])
+            setGebDriverTo(browser, attributes[GEB_DRIVER])
         } else if (globalAttributes.containsKey(GEB_DRIVER)) {
-            setGebDriver(browser, globalAttributes[GEB_DRIVER])
+            setGebDriverTo(browser, globalAttributes[GEB_DRIVER])
+        } else if (globalAttributes.containsKey(GEB_DRIVER2)) {
+            setGebDriverTo(browser, globalAttributes[GEB_DRIVER2])
         }
     }
 
-    void setGebDriver(Browser browser, Object driver) {
+    private void setGebDriverTo(Browser browser, Object driver) {
         Properties props = browser.config.properties
         Object oldDriver = props[GEB_DRIVER]
 
         if (oldDriver == null || !oldDriver.equals(driver)) {
             CachingDriverFactory.clearCacheAndQuitDriver()
+            browser.config.driver = null
             props[GEB_DRIVER] = driver
         }
     }

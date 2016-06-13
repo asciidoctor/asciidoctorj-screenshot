@@ -35,6 +35,18 @@ import java.awt.image.BufferedImage
  */
 class ImageDiffCalculator {
 
+    public static boolean compareImages(File screenshot, String expectedImageName) {
+        File expectedImage = new ImageDiffCalculator().class.classLoader.getResource(expectedImageName).file as File
+
+        assert screenshot.exists()
+
+        double diff = compare(screenshot, expectedImage)
+        if (diff > 0.1) {
+            throw new RuntimeException("diff in image was $diff")
+        }
+        return true
+    }
+
     public static double compare(File file1, File file2) {
         BufferedImage img1 = null;
         BufferedImage img2 = null;

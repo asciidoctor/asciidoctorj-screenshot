@@ -24,6 +24,7 @@
  */
 package org.asciidoctor.extension
 
+import geb.Browser
 import geb.driver.CachingDriverFactory
 import org.asciidoctor.ast.Document
 import org.asciidoctor.ast.DocumentRuby
@@ -42,6 +43,7 @@ class ShutdownGebPostProcessor extends Postprocessor {
     @Override
     String process(Document document, String output) {
         CachingDriverFactory.clearCacheAndQuitDriver()
+        new Browser().config.driver = null
         return output
     }
 }
