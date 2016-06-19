@@ -67,9 +67,9 @@ class GebBlock extends BlockProcessor implements DriverSelector, BrowserResizer 
             result.setVariable(it.simpleName, it)
         }
 
-        final Map<String, Object> adocAttrs = new HashMap<>(parent.document.attributes)
-        adocAttrs.putAll(attributes)
-        result.setVariable('adocAttrs', adocAttrs)
+        final Map<String, Object> asciidoc = new HashMap<>(parent.document.attributes)
+        asciidoc.putAll(attributes)
+        result.setVariable('asciidoc', asciidoc)
 
         return result
     }
