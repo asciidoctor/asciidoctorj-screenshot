@@ -28,15 +28,22 @@ waitFor(5){true}
 ```
 == Parameters
 
+=== Global
+
+The following global parameters allow to configure the screenshot extension.
+
+geb.driver:: select the geb driver for this document. The value is passed directly to GEB (see GEB for valid values).
+
 === screenshot
 
 The _screenshot_ block macro has the syntax `screenshot::<url>[<parameters>]` and supports the following parameters
 (note: the URL is not needed when the browser was navigated to the page using a _geb_ block or other means)
 
 name:: an optional unique file name (will be generated otherwise), the screenshot will be called `<name>.png`. This is the first positional parameter.
-frame:: Try awesomeness with `iphone5`, `nexus5` or `browser`. This is the second positional parameter.
+frame:: try awesomeness with `iphone5`, `nexus5` or `browser`. This is the second positional parameter.
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
 selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance `div #login_window`.
+geb.driver:: select the geb driver for this screenshot. Overwrites the global defined driver. The value is passed directly to GEB (see GEB for valid values).
 
 Note: it is not allowed to set both 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
 Note: `screenshot::http://google.com[google]` and `screenshot::http://google.com[name=google]` are equivalent.
@@ -53,6 +60,7 @@ Browser:: The class `geb.Browser`
 Dimension:: The class `org.openqa.selenium.Dimension`
 Keys:: The class `org.openqa.selenium.Keys`
 adocAttrs:: a map containing all attributes defined in the current asciidoc file (including the attributes of the geb block). This is useful to pass information like an URL, username, password, etc. to the script.
+geb.driver:: select the geb driver for this block. Overwrites the global defined driver. The value is passed directly to GEB (see GEB for valid values).
 
 == Examples
 
@@ -83,5 +91,5 @@ $("h3.r a").click()
 
 ```
 .Look Ma, it's Nexus 5!
-screenshot::[frame=nexus5]
+screenshot::[frame=nexus5, geb.driver=chrome]
 ```
