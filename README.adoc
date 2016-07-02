@@ -26,6 +26,13 @@ $("input", name: "q").value("asciidoctor")
 waitFor(5){true}
 ....
 ```
+
+== Choosing the webdriver (browser)
+
+Default webdriver implementation used by screenshot extension is Firefox.
+A different webdriver can be configured globally or per screenshot using the `geb.driver` parameter (see below).
+The Firefox webdriver library is included. For any other webdriver you need to include the appropriate libraries at runtime.
+
 == Parameters
 
 === Global
