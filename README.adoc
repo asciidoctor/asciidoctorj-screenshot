@@ -23,7 +23,7 @@ The content of the block is passed to http://www.gebish.org/[Geb]. Geb is then t
 ....
 go "http://google.com"
 $("input", name: "q").value("asciidoctor")
-waitFor(5){true}
+Tread.sleep(5000)
 ....
 ```
 == Parameters
@@ -65,7 +65,7 @@ screenshot::http://google.com[google]
 [geb]
 ....
 $("input", name: "q").value("asciidoctor")
-waitFor(5){true}
+Tread.sleep(5000)
 ....
 ```
 
