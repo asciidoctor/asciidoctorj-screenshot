@@ -29,7 +29,7 @@ import org.openqa.selenium.Dimension
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.Window
 
-import static java.lang.Integer.min
+import static java.lang.Math.min
 
 /**
  * Trait which allows to resize the browser window. This is handy to trigger css media queries.
