@@ -1,10 +1,10 @@
 plugins {
     id 'groovy'
     id 'maven-publish'
-    id 'com.github.hierynomus.license' version '0.12.1'
-    id 'com.github.ben-manes.versions' version '0.12.0'
-    id 'com.jfrog.bintray' version '1.6'
-    id 'net.nemerosa.versioning' version '1.7.1'
+    id 'com.github.hierynomus.license' version '0.13.0'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+    id 'com.jfrog.bintray' version '1.7.3'
+    id 'net.nemerosa.versioning' version '2.5.1'
 }
 
 apply from: rootProject.file('gradle/publishing.gradle')
@@ -16,12 +16,12 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.6'
-    compile 'org.asciidoctor:asciidoctorj:1.5.4'
-    compile 'org.gebish:geb-core:0.13.1'
-    compile 'org.seleniumhq.selenium:selenium-firefox-driver:2.53.0'
-    compile 'org.seleniumhq.selenium:selenium-support:2.53.0'
+    compile 'org.codehaus.groovy:groovy-all:2.4.8'
+    compile 'org.asciidoctor:asciidoctorj:1.5.4.1'
+    compile 'org.gebish:geb-core:1.1'
+    compile 'org.seleniumhq.selenium:selenium-support:3.0.1'
 
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.0.1'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
