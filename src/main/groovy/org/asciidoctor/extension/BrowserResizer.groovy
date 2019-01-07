@@ -29,8 +29,6 @@ import org.openqa.selenium.Dimension
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebDriver.Window
 
-import static java.lang.Math.min
-
 /**
  * Trait which allows to resize the browser window. This is handy to trigger css media queries.
  */
@@ -46,10 +44,13 @@ trait BrowserResizer {
         int viewportWidth = driver.executeScript("return document.documentElement.clientWidth")
         int viewportHeight = driver.executeScript("return document.documentElement.clientHeight")
 
-        int viewportDeltaX = min(size.width - viewportWidth, 100)
-        int viewportDeltaY = min(size.height - viewportHeight, 100)
+        int viewportDeltaX = (size.width - viewportWidth) + 25
+        int viewportDeltaY = (size.height - viewportHeight) + 25
 
-        window.size = new Dimension(dim.width + viewportDeltaX, dim.height + viewportDeltaY)
+        int newWidth = dim.width + viewportDeltaX
+        int newHeight = dim.height + viewportDeltaY
+
+        window.size = new Dimension(newWidth, newHeight)
 
         return dim
     }
