@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'com.github.hierynomus.license' version '0.14.0'
     id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.jfrog.bintray' version '1.8.1'
     id 'net.nemerosa.versioning' version '2.7.1'
 }
 
