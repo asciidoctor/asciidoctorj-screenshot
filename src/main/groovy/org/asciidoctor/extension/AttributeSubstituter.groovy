@@ -37,14 +37,14 @@ trait AttributeSubstituter {
     String substituteAttributesInText(String text, Map<String, Object> attributes) {
         Matcher m = checkInputAgainstPattern(text)
 
-        String result = text;
+        String result = text
         if (m) {
             for (int i = 0; i < (int) m.size(); i++) {
                 result = replaceAttribute(result, m[i].toString(), attributes)
             }
         }
 
-        return result;
+        return result
     }
 
     private Matcher checkInputAgainstPattern(String input) {
