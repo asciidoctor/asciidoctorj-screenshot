@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.8'
-    compile 'org.asciidoctor:asciidoctorj:1.5.4.1'
+    compile 'org.codehaus.groovy:groovy-all:2.4.16'
+    compile 'org.asciidoctor:asciidoctorj:1.5.8.1'
     compile 'org.gebish:geb-core:2.3'
 
     compileOnly 'org.seleniumhq.selenium:selenium-support:3.141.59'

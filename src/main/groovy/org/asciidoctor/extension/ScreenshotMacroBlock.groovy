@@ -50,6 +50,7 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
         createBlock(parent, "image", "", [
                 target: screenshotDirName + '/' + screenshotFile.name,
                 title : attributes['title'],
+                alt : nameWithoutEnding(screenshotFile)
         ], [:])
     }
 
@@ -71,5 +72,14 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
             screenshotDirName = 'screenshots'
         }
         screenshotDirName
+    }
+
+    private String nameWithoutEnding(File file) {
+        String name = file.name
+        def positionOfLasPeriod = name.lastIndexOf('.')
+        if (positionOfLasPeriod > 0) {
+            name = name.substring(0, positionOfLasPeriod)
+        }
+        name
     }
 }

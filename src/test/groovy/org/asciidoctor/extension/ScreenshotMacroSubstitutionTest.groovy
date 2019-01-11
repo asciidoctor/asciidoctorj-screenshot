@@ -82,7 +82,7 @@ screenshot::{url}[name={name3}, dimension={dimension3}]
           html = html.replaceAll('\n', ' ')
 
         then:
-          html.contains('<div class="title">Figure 1. With Substitution</div>')
+          html.contains('<div class="title">With Substitution</div>')
 
           html =~ /<img src=".*imgName1\.png"/
           html.contains('alt="imgName1"')
