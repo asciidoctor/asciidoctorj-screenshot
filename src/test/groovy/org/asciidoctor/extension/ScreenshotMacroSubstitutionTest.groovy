@@ -84,7 +84,7 @@ screenshot::{url}[name={name3}, dimension={dimension3}]
         then:
           html.contains('<div class="title">With Substitution</div>')
 
-          html =~ /<img src=".*imgName1\.png"/
+          html.contains('<img src="screenshots/imgName1.png"')
           html.contains('alt="imgName1"')
 
           def imageFile1 = new File(outputDir, 'screenshots/imgName1.png')
@@ -93,7 +93,7 @@ screenshot::{url}[name={name3}, dimension={dimension3}]
           image1.height == 301
           image1.width == 201
 
-          html =~ /<img src=".*imgName2\.png"/
+        html.contains('<img src="screenshots/imgName2.png"')
           html.contains('alt="imgName2"')
 
           def imageFile2 = new File(outputDir, 'screenshots/imgName2.png')
@@ -102,7 +102,7 @@ screenshot::{url}[name={name3}, dimension={dimension3}]
           image2.height == 302
           image2.width == 202
 
-          html =~ /<img src=".*imgName3\.png"/
+        html.contains('<img src="screenshots/imgName3.png"')
           html.contains('alt="imgName3"')
 
           def imageFile3 = new File(outputDir, 'screenshots/imgName3.png')
