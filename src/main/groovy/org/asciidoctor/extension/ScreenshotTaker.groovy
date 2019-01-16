@@ -53,7 +53,7 @@ class ScreenshotTaker implements BrowserResizer {
     private final File imageFile
 
     ScreenshotTaker(File screenshotDir, Map<String, Object> attributes) {
-        this.screenshotDir = screenshotDir
+        this.screenshotDir = screenshotDir.canonicalFile
         this.dimension = attributes['dimension']
         this.frame = attributes['frame']
         this.url = attributes['url']
@@ -61,7 +61,7 @@ class ScreenshotTaker implements BrowserResizer {
 
         final String name = attributes['name']
         this.fileName = name ? name : uniqueName()
-        this.imageFile = new File(screenshotDir, fileName + ".png")
+        this.imageFile = new File(this.screenshotDir, fileName + ".png")
     }
 
     private static String uniqueName() {

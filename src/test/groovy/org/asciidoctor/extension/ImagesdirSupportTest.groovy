@@ -141,4 +141,17 @@ screenshot::${url}[name="screenImage"]
           def imageFile1 = new File(outputDir, 'screenie/screenImage.png')
           imageFile1.exists()
     }
+
+    def "test screenshotdir relative to parent of imagesdir"() {
+        when:
+          options.setAttributes(['screenshot-dir-name' : '../bildschirm'])
+          String html = asciidoctor.convert(document1, options)
+          html = html.replaceAll('\n', ' ')
+
+        then:
+          html.contains('<img src="./bildschirm/screenImage.png"')
+
+          def imageFile1 = new File(outputDir, 'bildschirm/screenImage.png')
+          imageFile1.exists()
+    }
 }
