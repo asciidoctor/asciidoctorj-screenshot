@@ -40,11 +40,11 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
     }
 
     def process(AbstractBlock parent, String target, Map<String, Object> attributes) {
-        attributes.put('url', substituteAttributesInText(target, parent.document.attributes))
-        final File buildDir = buildDir(parent)
-        final String screenshotDirName = screenshotDirName(parent)
-        final File screenshotDir = new File(buildDir, screenshotDirName)
+        final String url = substituteAttributesInText(target, parent.document.attributes)
+        attributes.put('url', url)
 
+        final String screenshotDirName = attribute(parent, 'screenshot-dir-name', 'screenshots')
+        final File screenshotDir = getScreenshotDir(parent, screenshotDirName)
         final File screenshotFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
 
         createBlock(parent, "image", "", [
@@ -54,6 +54,27 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
         ], [:])
     }
 
+    private String attribute(AbstractBlock block, String attributeName, String defaultValue) {
+        String value = block.getAttr(attributeName)
+
+        if (!value || value.isAllWhitespace()) {
+            value = defaultValue
+        }
+
+        value
+    }
+
+    private File getScreenshotDir(AbstractBlock block, String screenshotDirName) {
+        final String imagesDirName = attribute(block, 'imagesdir', '')
+
+        if (new File(imagesDirName).isAbsolute()) {
+            return new File(imagesDirName + '/' + screenshotDirName)
+        } else {
+            final File buildDir = buildDir(block)
+            return new File(buildDir, imagesDirName + '/' + screenshotDirName)
+        }
+    }
+
     private File buildDir(AbstractBlock block) {
         Map<RubySymbol, Object> globalOptions = block.document.options
 
@@ -61,17 +82,6 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
         String destDir = globalOptions[newSymbol(rubyRuntime, 'destination_dir')]
         String buildDir = toDir ? toDir : destDir
         new File(buildDir)
-    }
-
-    private String screenshotDirName(AbstractBlock block) {
-        Map<String, Object> globalAttributes = block.document.attributes
-
-        String screenshotDirName = globalAttributes['screenshot-dir-name']
-
-        if (!screenshotDirName || screenshotDirName.isAllWhitespace()) {
-            screenshotDirName = 'screenshots'
-        }
-        screenshotDirName
     }
 
     private String nameWithoutEnding(File file) {
