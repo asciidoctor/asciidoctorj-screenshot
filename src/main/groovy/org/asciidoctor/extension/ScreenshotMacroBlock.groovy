@@ -47,11 +47,20 @@ class ScreenshotMacroBlock extends BlockMacroProcessor implements BrowserResizer
         final File screenshotDir = getScreenshotDir(parent, screenshotDirName)
         final File screenshotFile = new ScreenshotTaker(screenshotDir, attributes).takeScreenshot()
 
-        createBlock(parent, "image", "", [
-                target: screenshotDirName + '/' + screenshotFile.name,
-                title : attributes['title'],
-                alt : nameWithoutEnding(screenshotFile)
-        ], [:])
+        final Map<String, Object> options = [
+                'target': screenshotDirName + '/' + screenshotFile.name,
+                'title' : attributes['title'],
+                'alt'   : nameWithoutEnding(screenshotFile)
+        ]
+
+        ['width', 'height'].each { key ->
+            final String value = attributes[key]
+            if (value && ! value.allWhitespace) {
+                options.put(key, value)
+            }
+        }
+
+        createBlock(parent, "image", "", options, [:])
     }
 
     private String attribute(AbstractBlock block, String attributeName, String defaultValue) {
