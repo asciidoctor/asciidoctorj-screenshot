@@ -44,4 +44,10 @@ class ShutdownGebPostProcessor extends Postprocessor {
         CachingDriverFactory.clearCacheAndQuitDriver()
         return output
     }
+
+    /* This is a workaround to support PDF as an output */
+    Object process(Object document, Object output) {
+        CachingDriverFactory.clearCacheAndQuitDriver()
+        return output
+    }
 }
