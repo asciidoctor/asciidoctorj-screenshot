@@ -37,6 +37,8 @@ name:: an optional unique file name (will be generated otherwise), the screensho
 frame:: Try awesomeness with `iphone5`, `nexus5` or `browser`. This is the second positional parameter.
 dimension:: size of the screenshot in the format `<width>x<height>` for instance 800x600. Also the values of 'frame' are supported.
 selector:: the CSS-like dom selector to screenshot. Only this will be part of the image. For instance `div #login_window`.
+width:: if set the value is passed unchanged to the backend (i.e. HTML or PDF). The behavior is the same as setting this attribute on an `image` block.
+height:: if set the value is passed unchanged to the backend (i.e. HTML or PDF). The behavior is the same as setting this attribute on an `image` block.
 
 Note: it is not allowed to set both 'frame' and 'dimension' or 'frame' and 'selector' for a screenshot.
 Note: `screenshot::http://google.com[google]` and `screenshot::http://google.com[name=google]` are equivalent.
